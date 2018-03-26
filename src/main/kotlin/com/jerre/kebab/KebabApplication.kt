@@ -31,6 +31,7 @@ class MvcConfig : WebMvcConfigurer {
         registry.addViewController("/").setViewName("home")
         registry.addViewController("/hello").setViewName("hello")
         registry.addViewController("/login").setViewName("loginfile")
+        registry.addViewController("/index").setViewName("index")
     }
 }
 
@@ -41,7 +42,7 @@ class WebSecurityConfig(disableDefaults: Boolean = false) : WebSecurityConfigure
         http!!
                 .authorizeRequests()
                 //Spring boot forventer at alt etter /static/ er root -> sample.js blir localhost:8080/js/sample.js
-                    .antMatchers("/", "/home", "/js/**", "/api/open/**").permitAll()
+                    .antMatchers("/", "/home", "/index", "/js/**", "/api/open/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
                 .formLogin()
