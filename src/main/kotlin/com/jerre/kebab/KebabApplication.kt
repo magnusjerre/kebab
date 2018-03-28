@@ -1,18 +1,21 @@
 package com.jerre.kebab
 
+import com.jerre.kebab.models.User
+import com.jerre.kebab.services.UserService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
-import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.provisioning.InMemoryUserDetailsManager
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.web.csrf.CsrfFilter
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
@@ -30,7 +33,7 @@ class MvcConfig : WebMvcConfigurer {
         registry.addViewController("/home").setViewName("home")
         registry.addViewController("/").setViewName("home")
         registry.addViewController("/hello").setViewName("hello")
-        registry.addViewController("/login").setViewName("loginfile")
+        //registry.addViewController("/login").setViewName("loginfile")
         registry.addViewController("/index").setViewName("index")
     }
 }
@@ -38,6 +41,8 @@ class MvcConfig : WebMvcConfigurer {
 @Configuration
 @EnableWebSecurity
 class WebSecurityConfig(disableDefaults: Boolean = false) : WebSecurityConfigurerAdapter(disableDefaults) {
+    @Autowired lateinit var userDetailsService: UserDetailsService
+
     override fun configure(http: HttpSecurity?) {
         http!!
                 .authorizeRequests()
@@ -46,24 +51,43 @@ class WebSecurityConfig(disableDefaults: Boolean = false) : WebSecurityConfigure
                     .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                    .loginPage("/login").permitAll()
+                    .successHandler(MyAuthenticationSuccessHandler())
+                    .failureHandler(MyAuthenticationFailureHandler())
+                .and()
+                .exceptionHandling()
+                    .authenticationEntryPoint(MyAuthenticationEntryPoint())
                 .and()
                 .logout()
+                    .logoutSuccessHandler(MyLogoutSuccessHandler())
                     .permitAll()
+                .and().addFilterAfter(CsrfTokenResponseHeaderBindingFilter(), CsrfFilter::class.java)
+    }
+
+    @Throws(Exception::class)
+    @Autowired
+    override fun configure(auth: AuthenticationManagerBuilder) {
+        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordencoder())
     }
 
     @Bean
-    override fun userDetailsService(): UserDetailsService {
-        val user = User.withDefaultPasswordEncoder().username("user").password("password").roles("USER").build()
-        return InMemoryUserDetailsManager(user)
+    override fun authenticationManagerBean(): AuthenticationManager {
+        return super.authenticationManagerBean()
     }
+
+    @Bean
+    fun bCryptPasswordencoder() = BCryptPasswordEncoder()
+
 }
 
 @RestController
 @RequestMapping("api/open")
 class JallaOpenController {
+    @Autowired lateinit var securityService: UserService
     @GetMapping("names")
     fun names() = listOf("Magnus", "Sofia")
+
+    @PostMapping("user", consumes = arrayOf("application/json"), produces = arrayOf("application/json"))
+    fun newUser(@RequestBody user: User) = securityService.save(user)
 }
 
 @RestController
