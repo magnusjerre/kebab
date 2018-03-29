@@ -31,15 +31,55 @@ function setCookie(cname: string, cvalue: any, exdays: number) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
-function handleCsrf(response: Response) {
+function handleCsrf(response: Response) : string {
     const newCsrf = response.headers.get("X-CSRF-TOKEN") as string;
     const exCsrf = getCookie(CSRF_COOKIE);
     if (newCsrf == null || newCsrf == exCsrf) {
-        console.log(`newCsrf is null or same as existing: ${newCsrf}`)
-        return;
+        console.log(`newCsrf is null or same as existing: ${newCsrf}`);
+        return exCsrf;
     }
+
     setCookie(CSRF_COOKIE, newCsrf, COOKE_LIFETIME);
     console.log(`setting new csrf: ${newCsrf}`);
+    return newCsrf;
+}
+
+function fetchCsrf() {
+    return fetch("/", {credentials: "same-origin"}).then((response: Response) => {
+        var csrf = handleCsrf(response);
+        return new Promise((resolve: (csrf: string) => void, reject: any) => {
+            resolve(csrf);
+        });
+    });
+}
+
+function login(username: string, password: string, csrf: string) {
+    fetch("/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        }, 
+        credentials: 'same-origin',
+        body: `username=${username}&password=${password}&_csrf=${csrf}`
+    })
+    .then((response: Response) => {
+        handleCsrf(response);
+        return response.body.getReader().read();
+    });
+}
+
+function logout(csrf: string) {
+    fetch("/logout", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `_csrf=${csrf}`
+    })
+    .then((response: Response) => {
+        handleCsrf(response);
+    });
 }
 
 export const App : React.StatelessComponent<any> = () => {
@@ -66,31 +106,11 @@ export const App : React.StatelessComponent<any> = () => {
 
             <button onClick={() => {
                 var csrf = getCookie(CSRF_COOKIE);
-                console.log("csrf from cookie", csrf);
                 var password = (document.getElementById("password") as HTMLInputElement).value;
                 var username = (document.getElementById("username") as HTMLInputElement).value;
-                fetch("/login", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    }, 
-                    credentials: 'same-origin',
-                    body: `username=${username}&password=${password}&_csrf=${csrf}`
-                })
-                .then((response: Response) => {
-                    handleCsrf(response);
-                    return response.body.getReader().read();
-                })
-                .then(stream => {
-                    console.log("stream", stream);
-                    const uintToString = (uintArray: any) => {
-                        var encodedString = String.fromCharCode.apply(null, uintArray),
-                            decodedString = decodeURIComponent(escape(encodedString));
-                        return decodedString;
-                    }
-                    console.log("string", uintToString(stream.value));
+                fetchCsrf().then((tcsrf: string) => {
+                    login(username, password, tcsrf);
                 });
-
             }}>Login button</button>
 
             <button onClick={() => {
@@ -116,18 +136,10 @@ export const App : React.StatelessComponent<any> = () => {
             }}>Opprett bruker</button>
 
             <button onClick={() => {
-                var csrf = getCookie(CSRF_COOKIE);
-                fetch("/logout", {
-                    method: "POST",
-                    credentials: "same-origin",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body: `_csrf=${csrf}`
-                })
-                .then((response: Response) => {
-                    handleCsrf(response);
-                })
+                //Noe som feiler om man prøver å logge ut rett etter login, henter derfor ny token
+                fetchCsrf().then((ncsrf: string) => {
+                    logout(ncsrf);
+                });
             }}>Log out</button>
             
             <div></div>
