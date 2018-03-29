@@ -95,6 +95,7 @@ export const App : React.StatelessComponent<any> = () => {
 
             <form id="myForm" action="Login">
                 <div><label htmlFor="username">Username:</label><input type="text" id="username" name="username" /></div>
+                <div><label htmlFor="email">Email:</label><input type="text" id="email" name="email" /></div>
                 <div><label htmlFor="password">Password:</label><input type="password" id="password" name="password" /></div>
             </form>
 
@@ -117,22 +118,27 @@ export const App : React.StatelessComponent<any> = () => {
                 var csrf = getCookie(CSRF_COOKIE);
                 var password = (document.getElementById("password") as HTMLInputElement).value;
                 var username = (document.getElementById("username") as HTMLInputElement).value;
-                fetch("/api/open/user", {
-                    method: "POST",
-                    credentials: "same-origin",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrf,
-                    },
-                    body: JSON.stringify({
-                        "_id": null,
-                        "username": username,
-                        "password": password
+                var email = (document.getElementById("email") as HTMLInputElement).value;
+                if (password && username && email) {
+                    fetch("/api/open/user", {
+                        method: "POST",
+                        credentials: "same-origin",
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrf,
+                        },
+                        body: JSON.stringify({
+                            "_id": null,
+                            "username": username,
+                            "password": password
+                        })
                     })
-                })
-                .then((response: Response) => {
-                    handleCsrf(response);
-                });
+                    .then((response: Response) => {
+                        handleCsrf(response);
+                    });
+                } else {
+                    console.log("Mangler input info for å kunne opprette bruker");
+                }
             }}>Opprett bruker</button>
 
             <button onClick={() => {
