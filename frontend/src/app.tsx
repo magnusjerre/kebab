@@ -5,6 +5,9 @@ require("../scss/styles.scss")
 
 declare function require(name: string): any
 
+const CSRF_COOKIE = "csrf";
+const COOKE_LIFETIME = 365;
+
 function getCookie(cname : any) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -28,6 +31,17 @@ function setCookie(cname: string, cvalue: any, exdays: number) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
+function handleCsrf(response: Response) {
+    const newCsrf = response.headers.get("X-CSRF-TOKEN") as string;
+    const exCsrf = getCookie(CSRF_COOKIE);
+    if (newCsrf == null || newCsrf == exCsrf) {
+        console.log(`newCsrf is null or same as existing: ${newCsrf}`)
+        return;
+    }
+    setCookie(CSRF_COOKIE, newCsrf, COOKE_LIFETIME);
+    console.log(`setting new csrf: ${newCsrf}`);
+}
+
 export const App : React.StatelessComponent<any> = () => {
     return (
         <div>
@@ -46,16 +60,12 @@ export const App : React.StatelessComponent<any> = () => {
 
             <button onClick={() => {
                 fetch("/", {credentials: "same-origin"}).then((response: Response) => {
-                    var headers = response.headers as Headers
-                    var csrf = headers.get("X-CSRF-TOKEN");
-                    console.log("csrf", csrf);
-                    setCookie("csrf", csrf, 365);
-                    console.log("csrf in cookie", getCookie("csrf"));
+                    handleCsrf(response);
                 })
             }}>Fetch CSRF</button>
 
             <button onClick={() => {
-                var csrf = getCookie("csrf");
+                var csrf = getCookie(CSRF_COOKIE);
                 console.log("csrf from cookie", csrf);
                 var password = (document.getElementById("password") as HTMLInputElement).value;
                 var username = (document.getElementById("username") as HTMLInputElement).value;
@@ -68,11 +78,7 @@ export const App : React.StatelessComponent<any> = () => {
                     body: `username=${username}&password=${password}&_csrf=${csrf}`
                 })
                 .then((response: Response) => {
-                    var headers = response.headers as Headers;
-                    var csrf = headers.get("X-CSRF-TOKEN");
-                    setCookie("csrf", csrf, 365);
-                    console.log("csrf from login-call", csrf);
-                    console.log("csrf in cookie", getCookie("csrf"));
+                    handleCsrf(response);
                     return response.body.getReader().read();
                 })
                 .then(stream => {
@@ -88,8 +94,7 @@ export const App : React.StatelessComponent<any> = () => {
             }}>Login button</button>
 
             <button onClick={() => {
-                var csrf = getCookie("csrf");
-                console.log("csrf from cookie", csrf);
+                var csrf = getCookie(CSRF_COOKIE);
                 var password = (document.getElementById("password") as HTMLInputElement).value;
                 var username = (document.getElementById("username") as HTMLInputElement).value;
                 fetch("/api/open/user", {
@@ -106,17 +111,12 @@ export const App : React.StatelessComponent<any> = () => {
                     })
                 })
                 .then((response: Response) => {
-                    var headers = response.headers as Headers;
-                    var csrf = headers.get("X-CSRF-TOKEN");
-                    setCookie("csrf", csrf, 365);
-                    console.log("csrf from create user-call", csrf);
-                    console.log("csrf in cookie", getCookie("csrf"));
-                    console.log("response", response);
+                    handleCsrf(response);
                 });
             }}>Opprett bruker</button>
 
             <button onClick={() => {
-                var csrf = getCookie("csrf");
+                var csrf = getCookie(CSRF_COOKIE);
                 fetch("/logout", {
                     method: "POST",
                     credentials: "same-origin",
@@ -126,12 +126,7 @@ export const App : React.StatelessComponent<any> = () => {
                     body: `_csrf=${csrf}`
                 })
                 .then((response: Response) => {
-                    console.log("response!", response);
-                    var headers = response.headers as Headers;
-                    var csrf = headers.get("X-CSRF-TOKEN");
-                    setCookie("csrf", csrf, 365);
-                    console.log("csrf from logout-call", csrf);
-                    console.log("csrf in cookie", getCookie("csrf"));
+                    handleCsrf(response);
                 })
             }}>Log out</button>
             
@@ -142,11 +137,7 @@ export const App : React.StatelessComponent<any> = () => {
                     credentials: "same-origin"
                 })
                 .then((response: Response) => {
-                    var headers = response.headers as Headers;
-                    var csrf = headers.get("X-CSRF-TOKEN");
-                    setCookie("csrf", csrf, 365);
-                    console.log("csrf from surnmaes-call", csrf);
-                    console.log("csrf in cookie", getCookie("csrf"));
+                    handleCsrf(response);
                     return response.json();
                 })
                 .then(json => console.log(json))
@@ -158,11 +149,7 @@ export const App : React.StatelessComponent<any> = () => {
                     credentials: "same-origin"
                 })
                 .then((response: Response) => {
-                    var headers = response.headers as Headers;
-                    var csrf = headers.get("X-CSRF-TOKEN");
-                    setCookie("csrf", csrf, 365);
-                    console.log("csrf from surnmaes-call", csrf);
-                    console.log("csrf in cookie", getCookie("csrf"));
+                    handleCsrf(response);
                     return response.json();
                 })
                 .then(json => console.log(json))
