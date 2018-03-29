@@ -112,10 +112,6 @@ export const App : React.StatelessComponent<any> = () => {
                     console.log("csrf from create user-call", csrf);
                     console.log("csrf in cookie", getCookie("csrf"));
                     console.log("response", response);
-                    return response.json();
-                })
-                .then(json => {
-                    console.log("ny bruker", json);
                 });
             }}>Opprett bruker</button>
 

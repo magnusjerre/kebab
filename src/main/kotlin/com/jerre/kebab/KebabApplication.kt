@@ -87,7 +87,9 @@ class JallaOpenController {
     fun names() = listOf("Magnus", "Sofia")
 
     @PostMapping("user", consumes = arrayOf("application/json"), produces = arrayOf("application/json"))
-    fun newUser(@RequestBody user: User) = securityService.save(user)
+    fun newUser(@RequestBody user: User) {
+        securityService.save(user)
+    }
 }
 
 @RestController
