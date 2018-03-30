@@ -1,6 +1,6 @@
 package com.jerre.kebab.services
 
-import com.jerre.kebab.UserRepository
+import com.jerre.kebab.repositories.UserRepository
 import com.jerre.kebab.models.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder

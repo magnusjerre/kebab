@@ -1,4 +1,4 @@
-package com.jerre.kebab
+package com.jerre.kebab.repositories
 
 import com.jerre.kebab.models.User
 import org.springframework.data.mongodb.repository.MongoRepository

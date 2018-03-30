@@ -1,4 +1,6 @@
 import * as React from "react";
+import { ShopEdit } from "./ShopEdit";
+import { DishEdit } from "./DishEdit";
 
 let pluss = require("../images/check.png")
 require("../scss/styles.scss")
@@ -173,6 +175,16 @@ export const App : React.StatelessComponent<any> = () => {
                 .then(json => console.log(json))
             }}>hent åpen data</button>
 
+            <label htmlFor="shopId">ShopId:</label><input type="text" id="shopId" name="shopId" />
+            <button onClick={() => {
+                const shopId = (document.getElementById("shopId") as HTMLInputElement).value;
+                fetch(`/api/open/shop/${shopId}/dish`)
+                .then((response: Response) => response.json())
+                .then(json => console.log("dishes", json));
+            }}>Hent retter for sjappe</button>
+
+            <ShopEdit />
+            <DishEdit />
         </div>
     );
 }

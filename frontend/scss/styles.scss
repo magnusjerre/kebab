@@ -3,3 +3,17 @@ $mainTextColor: green;
 p {
     color: green;
 }
+
+label {
+    display: block;
+}
+
+.price-size-component {
+    background-color: lightgray;
+    margin: 0.5em 0;
+}
+
+.dish {
+    background-color: lightblue;
+    padding: 0.25em;
+}

@@ -1,6 +1,8 @@
 package com.jerre.kebab
 
-import com.jerre.kebab.models.User
+import com.jerre.kebab.models.*
+import com.jerre.kebab.services.DishService
+import com.jerre.kebab.services.ShopService
 import com.jerre.kebab.services.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -80,6 +82,9 @@ class WebSecurityConfig(disableDefaults: Boolean = false) : WebSecurityConfigure
 @RequestMapping("api/open")
 class JallaOpenController {
     @Autowired lateinit var securityService: UserService
+    @Autowired lateinit var shopService: ShopService
+    @Autowired lateinit var dishService: DishService
+
     @GetMapping("names")
     fun names() = listOf("Magnus", "Sofia")
 
@@ -87,11 +92,45 @@ class JallaOpenController {
     fun newUser(@RequestBody user: User) {
         securityService.save(user)
     }
+
+    @GetMapping("nyShop")
+    fun nyShop() = shopService.save(Shop(name = "New Beirut", address = "Torggata"))
+
+    @GetMapping("nyDish")
+    fun nyDish() = dishService.save(Dish(name = "Kebab",
+            priceSizes = arrayOf(
+                    PriceSize(55, Size(SizeEnum.SMALL, "Liten")),
+                    PriceSize(60, Size(SizeEnum.MEDIUM, "Vanlig")),
+                    PriceSize(75, Size(SizeEnum.LARGE, "King kong"))
+            ),
+            shopId = "jfjf",
+            vegetarian = false))
+
+    @GetMapping("shop")
+    fun shop() = shopService.findAll()
+
+    @GetMapping("dish")
+    fun dish() = dishService.findAll()
+
+    @GetMapping("shop/{shopId}/dish")
+    fun getDishesForShop(@PathVariable shopId: String) = dishService.findDishesForShop(shopId)
+
+    @PostMapping("shop")
+    fun insertShop(@RequestBody shop: Shop) = shopService.save(shop)
 }
 
 @RestController
 @RequestMapping("api/closed")
 class JallaClosedController {
+    @Autowired lateinit var shopService: ShopService
+    @Autowired lateinit var dishService: DishService
+
     @GetMapping("surnames")
     fun surnames() = listOf("Jerre", "Bakke")
+
+    @PostMapping("shop")
+    fun insertShop(@RequestBody shop: Shop) = shopService.save(shop)
+
+    @PostMapping("dish")
+    fun insertDish(@RequestBody dish: Dish) = dishService.save(dish)
 }

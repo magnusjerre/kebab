@@ -1,6 +1,6 @@
 package com.jerre.kebab.services
 
-import com.jerre.kebab.UserRepository
+import com.jerre.kebab.repositories.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
