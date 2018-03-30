@@ -37,3 +37,41 @@ export interface Size {
 export enum SizeEnum {
     XSMALL, SMALL, MEDIUM, LARGE, XLARGE
 }
+
+export interface PurchasePost {
+    dishId: string
+    purchaseInfo: PurchaseInfo
+    ratingInfo: RatingInfo
+}
+
+export interface PurchaseInfo {
+    price: number
+    size: SizeEnum
+    strength: StrengthEnum
+}
+
+export interface RatingInfo {
+    rating: Grade
+    strength: StrengthEnum
+    deliveryTime: DeliveryTime
+}
+
+export interface Grade {
+    value: number
+    max: number
+}
+
+export enum StrengthEnum {
+    MILD, MEDIUM, HOT, INTENSE
+}
+
+export enum DeliveryTime {
+    SLOW, OK, FAST
+}
+
+export interface IAppState {
+    shops: Shop[]
+    dishes: Dish[]
+    chosenShopId: string
+    chosenDishId: string
+}

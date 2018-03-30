@@ -2,6 +2,7 @@ package com.jerre.kebab
 
 import com.jerre.kebab.models.*
 import com.jerre.kebab.services.DishService
+import com.jerre.kebab.services.PurchaseService
 import com.jerre.kebab.services.ShopService
 import com.jerre.kebab.services.UserService
 import org.springframework.beans.factory.annotation.Autowired
@@ -124,6 +125,7 @@ class JallaOpenController {
 class JallaClosedController {
     @Autowired lateinit var shopService: ShopService
     @Autowired lateinit var dishService: DishService
+    @Autowired lateinit var purchaseService: PurchaseService
 
     @GetMapping("surnames")
     fun surnames() = listOf("Jerre", "Bakke")
@@ -133,4 +135,10 @@ class JallaClosedController {
 
     @PostMapping("dish")
     fun insertDish(@RequestBody dish: Dish) = dishService.save(dish)
+
+    @PostMapping("purchase")
+    fun insertDish(@RequestBody purchasePost: PurchasePost) = purchaseService.save(purchasePost)
+
+    @GetMapping("purchase")
+    fun getPurchasesForLoggedInUser() = purchaseService.findAllForLoggedInUser()
 }

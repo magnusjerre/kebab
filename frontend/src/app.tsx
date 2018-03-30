@@ -1,59 +1,14 @@
 import * as React from "react";
 import { ShopEdit } from "./ShopEdit";
 import { DishEdit } from "./DishEdit";
+import { PurchaseRegistration } from "./PurchaseRegistration";
+import { handleCsrf, fetchCsrf, getCookie, CSRF_COOKIE } from "./utils";
+import { IAppState, Shop, Dish } from "./models";
 
 let pluss = require("../images/check.png")
 require("../scss/styles.scss")
 
 declare function require(name: string): any
-
-const CSRF_COOKIE = "csrf";
-const COOKE_LIFETIME = 365;
-
-function getCookie(cname : any) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}
-
-function setCookie(cname: string, cvalue: any, exdays: number) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-    var expires = "expires="+d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
-
-function handleCsrf(response: Response) : string {
-    const newCsrf = response.headers.get("X-CSRF-TOKEN") as string;
-    const exCsrf = getCookie(CSRF_COOKIE);
-    if (newCsrf == null || newCsrf == exCsrf) {
-        console.log(`newCsrf is null or same as existing: ${newCsrf}`);
-        return exCsrf;
-    }
-
-    setCookie(CSRF_COOKIE, newCsrf, COOKE_LIFETIME);
-    console.log(`setting new csrf: ${newCsrf}`);
-    return newCsrf;
-}
-
-function fetchCsrf() {
-    return fetch("/", {credentials: "same-origin"}).then((response: Response) => {
-        var csrf = handleCsrf(response);
-        return new Promise((resolve: (csrf: string) => void, reject: any) => {
-            resolve(csrf);
-        });
-    });
-}
 
 function login(username: string, password: string, csrf: string) {
     fetch("/login", {
@@ -84,107 +39,144 @@ function logout(csrf: string) {
     });
 }
 
-export const App : React.StatelessComponent<any> = () => {
-    return (
-        <div>
-            <p>hello, this is react!</p>
-            <img src={pluss}/>
-            <button onClick={() => {
-                fetch("/api/open/names")
-                .then((response: Response) => response.json())
-                .then(json => console.log(json));
-            }} >Hent navn</button>
+export class App extends React.Component<any, IAppState> {
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            shops: [],
+            dishes: [],
+            chosenShopId: "",
+            chosenDishId: ""
+        };
+    }
 
-            <form id="myForm" action="Login">
-                <div><label htmlFor="username">Username:</label><input type="text" id="username" name="username" /></div>
-                <div><label htmlFor="email">Email:</label><input type="text" id="email" name="email" /></div>
-                <div><label htmlFor="password">Password:</label><input type="password" id="password" name="password" /></div>
-            </form>
-
-            <button onClick={() => {
-                fetch("/", {credentials: "same-origin"}).then((response: Response) => {
-                    handleCsrf(response);
+    componentWillMount() {
+        fetchCsrf().then((csrf: string) => {
+            fetch("/api/open/shop").then((response: Response) => response.json()).then((shops: Shop[]) => {
+                var chosenShopId = (shops.length > 0) ? shops[0].id : "";
+                this.setState({
+                    ...this.state,
+                    shops,
+                    chosenShopId
                 })
-            }}>Fetch CSRF</button>
+            });
+            fetch("/api/open/dish").then((response: Response) => response.json()).then((dishes: Dish[]) => {
+                var chosenDishId = (dishes.length > 0) ? dishes[0].id : "";
+                this.setState({
+                    ...this.state,
+                    dishes,
+                    chosenDishId
+                })
+            });
+        });
+    }
 
-            <button onClick={() => {
-                var csrf = getCookie(CSRF_COOKIE);
-                var password = (document.getElementById("password") as HTMLInputElement).value;
-                var username = (document.getElementById("username") as HTMLInputElement).value;
-                fetchCsrf().then((tcsrf: string) => {
-                    login(username, password, tcsrf);
-                });
-            }}>Login button</button>
+    render() {
+        return (
+            <div>
+                <p>hello, this is react!</p>
+                <img src={pluss}/>
+                <button onClick={() => {
+                    fetch("/api/open/names")
+                    .then((response: Response) => response.json())
+                    .then(json => console.log(json));
+                }} >Hent navn</button>
 
-            <button onClick={() => {
-                var csrf = getCookie(CSRF_COOKIE);
-                var password = (document.getElementById("password") as HTMLInputElement).value;
-                var username = (document.getElementById("username") as HTMLInputElement).value;
-                var email = (document.getElementById("email") as HTMLInputElement).value;
-                if (password && username && email) {
-                    fetch("/api/open/user", {
-                        method: "POST",
-                        credentials: "same-origin",
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': csrf,
-                        },
-                        body: JSON.stringify({
-                            "_id": null,
-                            "username": username,
-                            "password": password
+                <form id="myForm" action="Login">
+                    <div><label htmlFor="username">Username:</label><input type="text" id="username" name="username" /></div>
+                    <div><label htmlFor="email">Email:</label><input type="text" id="email" name="email" /></div>
+                    <div><label htmlFor="password">Password:</label><input type="password" id="password" name="password" /></div>
+                </form>
+
+                <button onClick={() => {
+                    fetch("/", {credentials: "same-origin"}).then((response: Response) => {
+                        handleCsrf(response);
+                    })
+                }}>Fetch CSRF</button>
+
+                <button onClick={() => {
+                    var csrf = getCookie(CSRF_COOKIE);
+                    var password = (document.getElementById("password") as HTMLInputElement).value;
+                    var username = (document.getElementById("username") as HTMLInputElement).value;
+                    fetchCsrf().then((tcsrf: string) => {
+                        login(username, password, tcsrf);
+                    });
+                }}>Login button</button>
+
+                <button onClick={() => {
+                    var csrf = getCookie(CSRF_COOKIE);
+                    var password = (document.getElementById("password") as HTMLInputElement).value;
+                    var username = (document.getElementById("username") as HTMLInputElement).value;
+                    var email = (document.getElementById("email") as HTMLInputElement).value;
+                    if (password && username && email) {
+                        fetch("/api/open/user", {
+                            method: "POST",
+                            credentials: "same-origin",
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrf,
+                            },
+                            body: JSON.stringify({
+                                "_id": null,
+                                "username": username,
+                                "password": password
+                            })
                         })
+                        .then((response: Response) => {
+                            handleCsrf(response);
+                        });
+                    } else {
+                        console.log("Mangler input info for å kunne opprette bruker");
+                    }
+                }}>Opprett bruker</button>
+
+                <button onClick={() => {
+                    //Noe som feiler om man prøver å logge ut rett etter login, henter derfor ny token
+                    fetchCsrf().then((ncsrf: string) => {
+                        logout(ncsrf);
+                    });
+                }}>Log out</button>
+                
+                <div></div>
+                <button onClick={() => {
+                    fetch("/api/closed/surnames", {
+                        method: "GET",
+                        credentials: "same-origin"
                     })
                     .then((response: Response) => {
                         handleCsrf(response);
-                    });
-                } else {
-                    console.log("Mangler input info for å kunne opprette bruker");
+                        return response.json();
+                    })
+                    .then(json => console.log(json))
+                }}>hent sikret data</button>
+
+                <button onClick={() => {
+                    fetch("/api/open/names", {
+                        method: "GET",
+                        credentials: "same-origin"
+                    })
+                    .then((response: Response) => {
+                        handleCsrf(response);
+                        return response.json();
+                    })
+                    .then(json => console.log(json))
+                }}>hent åpen data</button>
+
+                <label htmlFor="shopId">ShopId:</label><input type="text" id="shopId" name="shopId" />
+                <button onClick={() => {
+                    const shopId = (document.getElementById("shopId") as HTMLInputElement).value;
+                    fetch(`/api/open/shop/${shopId}/dish`)
+                    .then((response: Response) => response.json())
+                    .then(json => console.log("dishes", json));
+                }}>Hent retter for sjappe</button>
+
+                <ShopEdit />
+                <DishEdit />
+                {
+                    this.state.chosenDishId != "" && <PurchaseRegistration dish={this.state.dishes.filter(dish => dish.id === this.state.chosenDishId)[0]} maxGrade={5} />
                 }
-            }}>Opprett bruker</button>
-
-            <button onClick={() => {
-                //Noe som feiler om man prøver å logge ut rett etter login, henter derfor ny token
-                fetchCsrf().then((ncsrf: string) => {
-                    logout(ncsrf);
-                });
-            }}>Log out</button>
-            
-            <div></div>
-            <button onClick={() => {
-                fetch("/api/closed/surnames", {
-                    method: "GET",
-                    credentials: "same-origin"
-                })
-                .then((response: Response) => {
-                    handleCsrf(response);
-                    return response.json();
-                })
-                .then(json => console.log(json))
-            }}>hent sikret data</button>
-
-            <button onClick={() => {
-                fetch("/api/open/names", {
-                    method: "GET",
-                    credentials: "same-origin"
-                })
-                .then((response: Response) => {
-                    handleCsrf(response);
-                    return response.json();
-                })
-                .then(json => console.log(json))
-            }}>hent åpen data</button>
-
-            <label htmlFor="shopId">ShopId:</label><input type="text" id="shopId" name="shopId" />
-            <button onClick={() => {
-                const shopId = (document.getElementById("shopId") as HTMLInputElement).value;
-                fetch(`/api/open/shop/${shopId}/dish`)
-                .then((response: Response) => response.json())
-                .then(json => console.log("dishes", json));
-            }}>Hent retter for sjappe</button>
-
-            <ShopEdit />
-            <DishEdit />
-        </div>
-    );
+                {/* <PurchaseRegistration dish={null} maxGrade={5} /> */}
+            </div>
+        );
+    }
 }

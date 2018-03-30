@@ -16,7 +16,13 @@ class DishService {
         return dishRepository.save(dish)
     }
 
-    fun findById(id: String) = dishRepository.findById(id)
+    fun findById(id: String) : Dish? {
+        val dish = dishRepository.findById(id)
+        if (dish.isPresent()) {
+            return dish.get()
+        }
+        return null
+    }
 
     fun findAll() = dishRepository.findAll()
 

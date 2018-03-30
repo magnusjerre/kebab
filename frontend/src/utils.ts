@@ -1,4 +1,4 @@
-import { Size, SizeEnum, Dish, DishBackend, PriceSizeBackend,PriceSizeFrontend } from "./models";
+import { Size, SizeEnum, Dish, DishBackend, PriceSizeBackend,PriceSizeFrontend, StrengthEnum, DeliveryTime } from "./models";
 
 export const CSRF_COOKIE = "csrf";
 export const COOKE_LIFETIME = 365;
