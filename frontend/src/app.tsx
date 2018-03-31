@@ -4,6 +4,8 @@ import { DishEdit } from "./DishEdit";
 import { PurchaseRegistration } from "./PurchaseRegistration";
 import { handleCsrf, fetchCsrf, getCookie, CSRF_COOKIE } from "./utils";
 import { IAppState, Shop, Dish } from "./models";
+import { ShopList } from "./shop/ShopList";
+import { DishList } from "./dish/DishList";
 
 let pluss = require("../images/check.png")
 require("../scss/styles.scss")
@@ -48,6 +50,9 @@ export class App extends React.Component<any, IAppState> {
             chosenShopId: "",
             chosenDishId: ""
         };
+
+        this.selectDish = this.selectDish.bind(this);
+        this.selectShop = this.selectShop.bind(this);
     }
 
     componentWillMount() {
@@ -71,9 +76,28 @@ export class App extends React.Component<any, IAppState> {
         });
     }
 
+    selectShop(id: string) {
+        this.setState({
+            ...this.state,
+            chosenDishId: "",
+            chosenShopId: id
+        });
+    }
+
+    selectDish(id: string) {
+        this.setState({
+            ...this.state,
+            chosenDishId: id
+        });
+    }
+
     render() {
+        var shopId = this.state.chosenShopId;
+        var dishList = shopId == "" ? [] : this.state.dishes.filter(dish => dish.shopId == shopId);
         return (
             <div>
+                <ShopList shops={this.state.shops} selectShop={this.selectShop}/>
+                <DishList dishes={dishList} selectDish={this.selectDish} />
                 <p>hello, this is react!</p>
                 <img src={pluss}/>
                 <button onClick={() => {

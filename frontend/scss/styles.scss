@@ -1,4 +1,11 @@
 $mainTextColor: green;
+$basePadding: 0.25em;
+$mainBackgroundColor: lightyellow;
+$listElementBackgroundColor: goldenrod;
+
+body {
+    background-color: $mainBackgroundColor;
+}
 
 p {
     color: green;
@@ -20,6 +27,23 @@ label {
 
 .card {
     background-color: lightgreen;
+    padding: 0.25em;
+    margin: 0.25em;
+}
+
+.list-element {
+    margin-bottom: 0.25em;
+    padding: 0 $basePadding;
+    background-color: $listElementBackgroundColor;
+    cursor: pointer;
+    
+    p {
+        color: black;
+        font-style: italic;
+    }
+}
+
+.container {
     padding: 0.25em;
     margin: 0.25em;
 }
