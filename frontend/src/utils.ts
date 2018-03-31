@@ -52,6 +52,23 @@ export function sizeToString(size: SizeEnum) : string {
     }
 }
 
+export function strengthToStringName(strength: StrengthEnum) : string {
+    switch(strength) {
+        case StrengthEnum.MILD: return "Mild";
+        case StrengthEnum.MEDIUM: return "Medium";
+        case StrengthEnum.HOT: return "Hot";
+        default: return "Intense";
+    }
+}
+
+export function deliveryTimeToStringName(deliveryTime: DeliveryTime) : string {
+    switch(deliveryTime) {
+        case DeliveryTime.SLOW: return "Treig";
+        case DeliveryTime.OK: return "Forventet";
+        default: return "Rask";
+    }
+}
+
 export function stringToBoolean(str: string) : boolean {
     if (str === "true" || str === "TRUE" || str === "true")
         return true;

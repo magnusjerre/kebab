@@ -2,6 +2,10 @@ $mainTextColor: green;
 $basePadding: 0.25em;
 $mainBackgroundColor: lightyellow;
 $listElementBackgroundColor: goldenrod;
+$enumElementColor: lightyellow;
+$enumElementBorderColor: burlywood;
+$enumElementSelectedBorderColor: black;
+$enumElementSelectedBackgroundColor: burlywood;
 
 body {
     background-color: $mainBackgroundColor;
@@ -46,4 +50,47 @@ label {
 .container {
     padding: 0.25em;
     margin: 0.25em;
+}
+
+.enum-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    height: 2em;
+}
+
+.enum-div {
+    flex-grow: 1;
+    margin: 0 0.25em;
+    cursor: pointer;
+}
+
+.enum-element {
+    border: 2px solid $enumElementBorderColor;
+    background-color: $enumElementColor;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
+    border: 2px green dotted;
+    color: yellow;
+}
+
+.enum-element-selected {
+    border: 2px solid $enumElementSelectedBorderColor;
+    background-color: $enumElementSelectedBackgroundColor;
+}
+
+.hidden-input {
+    display: block;
+    position: absolute;
+    opacity: 0;
+    z-index: -10;
 }

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ShopEdit } from "./ShopEdit";
 import { DishEdit } from "./DishEdit";
-import { PurchaseRegistration } from "./PurchaseRegistration";
+import { PurchaseRegistration } from "./purchase/PurchaseRegistration";
 import { handleCsrf, fetchCsrf, getCookie, CSRF_COOKIE } from "./utils";
 import { IAppState, Shop, Dish } from "./models";
 import { ShopList } from "./shop/ShopList";
