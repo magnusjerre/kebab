@@ -1,4 +1,4 @@
-import { Size, SizeEnum, Dish, DishBackend, PriceSizeBackend,PriceSizeFrontend, StrengthEnum, DeliveryTime } from "./models";
+import { Size, SizeEnum, Dish, DishBackend, PriceSizeBackend,PriceSizeFrontend, StrengthEnum, DeliveryTime, Shop } from "./models";
 
 export const CSRF_COOKIE = "csrf";
 export const COOKE_LIFETIME = 365;
@@ -102,5 +102,16 @@ export function fetchCsrf() {
         return new Promise((resolve: (csrf: string) => void, reject: any) => {
             resolve(csrf);
         });
+    });
+}
+
+export function fetchShops(compRef: any) {
+    fetch("/api/open/shop").then((response: Response) => response.json()).then((shops: Shop[]) => {
+        compRef.setState({
+            ...compRef.state,
+            shops,
+            chosenShopId: "",
+            chosenDishId: ""
+        })
     });
 }

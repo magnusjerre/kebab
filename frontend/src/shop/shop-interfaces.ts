@@ -10,6 +10,17 @@ export interface IShopElement {
 }
 
 export interface IShopList {
+    createNewShop: VoidFunction
     selectShop: ISelectShop
     shops: Shop[]
+}
+
+export interface IShopRegistration {
+    id?: string
+    name: string
+    address: string
+}
+
+export interface IShopEditProps extends IShopRegistration {
+    done: VoidFunction
 }

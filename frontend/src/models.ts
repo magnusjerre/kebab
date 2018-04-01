@@ -74,4 +74,5 @@ export interface IAppState {
     dishes: Dish[]
     chosenShopId: string
     chosenDishId: string
+    createNewShop: boolean
 }
