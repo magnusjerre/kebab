@@ -1,8 +1,8 @@
 import * as React from "react";
 import { ShopEdit } from "./shop/registration/ShopEdit";
-import { DishEdit } from "./DishEdit";
+import { DishEdit } from "./dish/dish-edit/DishEdit";
 import { PurchaseRegistration } from "./purchase/PurchaseRegistration";
-import { handleCsrf, fetchCsrf, getCookie, CSRF_COOKIE, fetchShops } from "./utils";
+import { handleCsrf, fetchCsrf, getCookie, CSRF_COOKIE, fetchShops, fetchDishes } from "./utils";
 import { IAppState, Shop, Dish } from "./models";
 import { ShopList } from "./shop/ShopList";
 import { DishList } from "./dish/DishList";
@@ -49,24 +49,20 @@ export class App extends React.Component<any, IAppState> {
             dishes: [],
             chosenShopId: "",
             chosenDishId: "",
-            createNewShop: false
+            createNewShop: false,
+            createNewDish: false
         };
 
         this.selectDish = this.selectDish.bind(this);
         this.selectShop = this.selectShop.bind(this);
         this.setCreateNewShop = this.setCreateNewShop.bind(this);
+        this.setCreateNewDish = this.setCreateNewDish.bind(this);
     }
 
     componentWillMount() {
         fetchCsrf().then((csrf: string) => {
             fetchShops(this);
-            fetch("/api/open/dish").then((response: Response) => response.json()).then((dishes: Dish[]) => {
-                this.setState({
-                    ...this.state,
-                    dishes,
-                    chosenDishId: ""
-                })
-            });
+            fetchDishes(this);
         });
     }
 
@@ -92,13 +88,23 @@ export class App extends React.Component<any, IAppState> {
         });
     }
 
+    setCreateNewDish(value: boolean) {
+        this.setState({
+            ...this.state,
+            createNewDish: value
+        });
+    }
+
     render() {
         var shopId = this.state.chosenShopId;
         var dishList = shopId == "" ? [] : this.state.dishes.filter(dish => dish.shopId == shopId);
         return (
             <div>
                 <ShopList createNewShop={() => this.setCreateNewShop(true)} shops={this.state.shops} selectShop={this.selectShop}/>
-                <DishList dishes={dishList} selectDish={this.selectDish} />
+                {
+                    this.state.chosenShopId && 
+                    <DishList createNewDish={() => this.setCreateNewDish(true)} dishes={dishList} selectDish={this.selectDish} />
+                }
                 <p>hello, this is react!</p>
                 <img src={pluss}/>
                 <button onClick={() => {
@@ -195,7 +201,13 @@ export class App extends React.Component<any, IAppState> {
                     .then(json => console.log("dishes", json));
                 }}>Hent retter for sjappe</button>
 
-                <DishEdit />
+                {
+                    this.state.createNewDish && this.state.chosenShopId != "" && <DishEdit dish={null} shopId={this.state.chosenShopId} done={() => {
+                        this.setCreateNewDish(false);
+                        fetchDishes(this);
+                    }}/>
+                }
+                
                 {
                     this.state.chosenDishId != "" && <PurchaseRegistration dish={this.state.dishes.filter(dish => dish.id === this.state.chosenDishId)[0]} maxGrade={5} />
                 }

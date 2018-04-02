@@ -29,5 +29,5 @@ data class PriceSize(val price: Int, val size: Size)
 data class Size(val size: SizeEnum, val name: String)
 
 enum class SizeEnum {
-    XSMALL, SMALL, MEDIUM, LARGE, XLARGE
+    XSMALL, SMALL, MEDIUM, LARGE, XLARGE, SINGLE_SIZE
 }

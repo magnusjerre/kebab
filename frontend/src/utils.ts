@@ -76,8 +76,9 @@ export function stringToBoolean(str: string) : boolean {
 }
 
 export function convertFrontendDishToBackendDish(frontendDish: Dish) : DishBackend {
+    const id = frontendDish.id ? frontendDish.id : null;
     var output = <DishBackend>{
-        id: frontendDish.id,
+        id: id,
         name: frontendDish.name,
         shopId: frontendDish.shopId,
         vegetarian: frontendDish.vegetarian,
@@ -114,4 +115,38 @@ export function fetchShops(compRef: any) {
             chosenDishId: ""
         })
     });
+}
+
+export function fetchDishes(compRef: any) {
+    fetch("/api/open/dish").then((response: Response) => response.json()).then((dishes: Dish[]) => {
+        compRef.setState({
+            ...compRef.state,
+            dishes,
+            chosenDishId: ""
+        })
+    });
+}
+
+export function post(url: string, data: any, done: VoidFunction = () => {}) {
+    fetchCsrf().then(() =>
+        fetch(url, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": getCookie(CSRF_COOKIE)
+            },
+            body: JSON.stringify(data)
+        }).then((response: Response) => {done()})
+    );
+}
+
+export function copyArray(arr: any[]) : any[] {
+    var output = [];
+    for (var i = 0; i < arr.length; i++) {
+        output.push({
+            ...arr[i]
+        });
+    }
+    return output;
 }

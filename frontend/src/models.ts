@@ -35,7 +35,7 @@ export interface Size {
 }
 
 export enum SizeEnum {
-    XSMALL, SMALL, MEDIUM, LARGE, XLARGE
+    XSMALL, SMALL, MEDIUM, LARGE, XLARGE, SINGLE_SIZE
 }
 
 export interface PurchasePost {
@@ -75,4 +75,5 @@ export interface IAppState {
     chosenShopId: string
     chosenDishId: string
     createNewShop: boolean
+    createNewDish: boolean
 }

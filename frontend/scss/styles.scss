@@ -103,3 +103,29 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
 .inline-label {
     margin: 0.5em 0;
 }
+
+.price-size-element {
+    padding: 0.5em 0;
+    margin: 0.25em 0;
+    background-color: $listElementBackgroundColor;
+    
+    input[type="checkbox"] {
+        margin-right: 0.5em;
+    }
+
+    label {
+        display: inline-block;
+        margin-left: 0.5em;
+        margin-right: 0.25em;
+        font-weight: bold;
+    }
+
+    input {
+        width: 3.5em;
+    }
+
+    .currency {
+        font-weight: bold;
+    }
+
+}
