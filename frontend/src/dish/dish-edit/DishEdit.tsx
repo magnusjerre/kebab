@@ -68,7 +68,7 @@ export class DishEdit extends React.Component<IDishEditProps, IDishEdit> {
 
                 <PriceSizeComponent hasOnlyOneSize={this.state.hasOnlyOneSize} priceSizes={this.state.priceSizes} setHasOnlyOneSize={this.setHasOnlyOneSize} setPrice={this.setPriceSize}/>
 
-                <button className="kebab-button" onClick={() => post("/api/closed/dish", JSON.stringify(convertFrontendDishToBackendDish(this.state)), this.props.done) }>Lagre rett</button>
+                <button className="kebab-button" onClick={() => post("/api/closed/dish", convertFrontendDishToBackendDish(this.state), this.props.done) }>Lagre rett</button>
             </div>
         );
     }
