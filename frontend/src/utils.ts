@@ -150,3 +150,18 @@ export function copyArray(arr: any[]) : any[] {
     }
     return output;
 }
+
+export function login(username: string, password: string, csrf: string) {
+    fetch("/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        }, 
+        credentials: 'same-origin',
+        body: `username=${username}&password=${password}&_csrf=${csrf}`
+    })
+    .then((response: Response) => {
+        handleCsrf(response);
+        return response.body.getReader().read();
+    });
+}

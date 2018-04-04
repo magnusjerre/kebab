@@ -6,6 +6,7 @@ import { handleCsrf, fetchCsrf, getCookie, CSRF_COOKIE, fetchShops, fetchDishes 
 import { IAppState, Shop, Dish } from "./models";
 import { ShopList } from "./shop/ShopList";
 import { DishList } from "./dish/DishList";
+import { LoginHeader } from "./user/LoginHeader";
 
 let pluss = require("../images/check.png")
 require("../scss/styles.scss")
@@ -17,7 +18,7 @@ function login(username: string, password: string, csrf: string) {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
-        }, 
+        },
         credentials: 'same-origin',
         body: `username=${username}&password=${password}&_csrf=${csrf}`
     })
@@ -50,7 +51,7 @@ export class App extends React.Component<any, IAppState> {
             chosenShopId: "",
             chosenDishId: "",
             createNewShop: false,
-            createNewDish: false
+            createNewDish: false,
         };
 
         this.selectDish = this.selectDish.bind(this);
@@ -97,12 +98,13 @@ export class App extends React.Component<any, IAppState> {
 
     render() {
         var shopId = this.state.chosenShopId;
-        var dishList = shopId == "" ? [] : this.state.dishes.filter(dish => dish.shopId == shopId);
+        var dishList = this.state.dishes.filter(dish => dish.shopId == shopId);
         return (
             <div>
+                <LoginHeader />
                 <ShopList createNewShop={() => this.setCreateNewShop(true)} shops={this.state.shops} selectShop={this.selectShop}/>
                 {
-                    this.state.chosenShopId && 
+                    this.state.chosenShopId &&
                     <DishList createNewDish={() => this.setCreateNewDish(true)} dishes={dishList} selectDish={this.selectDish} />
                 }
                 <p>hello, this is react!</p>
@@ -167,7 +169,7 @@ export class App extends React.Component<any, IAppState> {
                         logout(ncsrf);
                     });
                 }}>Log out</button>
-                
+
                 <div></div>
                 <button onClick={() => {
                     fetch("/api/closed/surnames", {
@@ -207,7 +209,7 @@ export class App extends React.Component<any, IAppState> {
                         fetchDishes(this);
                     }}/>
                 }
-                
+
                 {
                     this.state.chosenDishId != "" && <PurchaseRegistration dish={this.state.dishes.filter(dish => dish.id === this.state.chosenDishId)[0]} maxGrade={5} />
                 }
@@ -216,7 +218,7 @@ export class App extends React.Component<any, IAppState> {
                     <ShopEdit id={null} name="" address="" done={() => {
                         this.setCreateNewShop(false);
                         fetchShops(this);
-                    }}/> 
+                    }}/>
                 }
             </div>
         );

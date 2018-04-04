@@ -129,3 +129,11 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
     }
 
 }
+
+.user-header {
+    display: flex;
+    justify-content: space-between;
+    height: 2em;
+    margin: 0.5em;
+}
+
