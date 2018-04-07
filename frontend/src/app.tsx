@@ -109,7 +109,7 @@ export class App extends React.Component<any, IAppState> {
         var shopId = this.state.chosenShopId;
         var dishList = this.state.dishes.filter(dish => dish.shopId == shopId);
         return (
-            <div>
+            <div className="app">
                 <LoginHeader loggedInState={this.setLoggedInState}/>
                 <ShopList createNewShop={() => this.setCreateNewShop(true)} isLoggedIn={this.state.isLoggedIn} shops={this.state.shops} selectShop={this.selectShop}/>
                 {
