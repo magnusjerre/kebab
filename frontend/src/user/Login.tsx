@@ -41,10 +41,13 @@ export class LoginComponent extends React.Component<ILoginProps, ILoginState> {
     render() {
         return (
             <div>
-                <h2>Logg inn</h2>
-                <Input id="username" label="Brukernavn" name="username" required={true} value={this.state.username} onChange={(val: string) => this.setState({...this.state, username: val})}/>
-                <Input id="password" label="Passord" name="password" required={true} type="password" value={this.state.password} onChange={(val: string) => this.setState({...this.state, password: val})}/>
-                <button className="kebab-button" onClick={() => this.login()}>Logg inn</button>
+                <div className="login-component">
+                    <h2>Logg inn</h2>
+                    <Input id="username" label="Brukernavn" name="username" required={true} value={this.state.username} onChange={(val: string) => this.setState({...this.state, username: val})}/>
+                    <Input id="password" label="Passord" name="password" required={true} type="password" value={this.state.password} onChange={(val: string) => this.setState({...this.state, password: val})}/>
+                    <button className="kebab-button" onClick={() => this.login()}>Logg inn</button>
+                </div>
+                <div className="login-background"></div>
             </div>);
     }
 }

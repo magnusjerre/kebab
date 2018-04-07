@@ -130,10 +130,39 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
 
 }
 
-.user-header {
-    display: flex;
-    justify-content: space-between;
-    height: 2em;
-    margin: 0.5em;
+.login-header-container {
+    width: 100%;
 }
 
+.user-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 2em;
+    margin: 0;
+    padding: 0.5em 0.25em;
+    background-color: lightcyan;
+    z-index: 10;
+
+    &-username {
+        font-weight: bold;
+    }
+}
+
+.kebab-button-disabled {
+    color: gray;
+    background-color: lightgray;
+}
+
+.login-background {
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+    opacity: 0.5;
+}
+
+.login-component {
+    position: relative;
+    opacity: 1;
+}

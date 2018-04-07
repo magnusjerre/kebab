@@ -1,7 +1,8 @@
 export interface ILoginHeader {
     isLoggedIn: boolean
-    viewState: LoginEnum
+    view: LoginEnum
     username: string
+    animateIn: boolean
 }
 
 export interface ILoginUserInfo {
@@ -18,6 +19,7 @@ export enum LoginEnum {
 }
 
 export interface ILoggedInHeader {
+    enabled: boolean
     username: string
     logout: VoidFunction
 }
@@ -25,4 +27,5 @@ export interface ILoggedInHeader {
 export interface ILoggedOutHeader {
     login: VoidFunction
     register: VoidFunction
+    enabled: boolean
 }
