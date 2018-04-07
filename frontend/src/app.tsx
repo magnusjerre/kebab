@@ -13,35 +13,6 @@ require("../scss/styles.scss")
 
 declare function require(name: string): any
 
-function login(username: string, password: string, csrf: string) {
-    fetch("/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        credentials: 'same-origin',
-        body: `username=${username}&password=${password}&_csrf=${csrf}`
-    })
-    .then((response: Response) => {
-        handleCsrf(response);
-        return response.body.getReader().read();
-    });
-}
-
-function logout(csrf: string) {
-    fetch("/logout", {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: `_csrf=${csrf}`
-    })
-    .then((response: Response) => {
-        handleCsrf(response);
-    });
-}
-
 export class App extends React.Component<any, IAppState> {
     constructor(props: any) {
         super(props);
