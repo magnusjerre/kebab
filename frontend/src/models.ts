@@ -76,4 +76,5 @@ export interface IAppState {
     chosenDishId: string
     createNewShop: boolean
     createNewDish: boolean
+    isLoggedIn: boolean
 }

@@ -33,7 +33,11 @@ interface ILoginHeader {
     enableHeaderInputs: boolean
 }
 
-export class LoginHeader extends React.Component<{}, ILoginHeader> {
+export interface ILoginHeaderProps {
+    loggedInState: (value: boolean) => void
+}
+
+export class LoginHeader extends React.Component<ILoginHeaderProps, ILoginHeader> {
     constructor(props: any) {
         super(props);
         this.state = {
@@ -67,6 +71,7 @@ export class LoginHeader extends React.Component<{}, ILoginHeader> {
             })
             .then((response: Response) => {
                 handleCsrf(response);
+                this.props.loggedInState(false);
                 const headerView = response.status < 400 ? HeaderView.SHOW_LOGGED_OUT : HeaderView.SHOW_LOGGED_OUT;
                 this.setState({
                     ...this.state,
@@ -103,6 +108,7 @@ export class LoginHeader extends React.Component<{}, ILoginHeader> {
             headerView: HeaderView.SHOW_LOGGED_IN,
             username
         });
+        this.props.loggedInState(true);
     }
 
     cancelLoginView = () => {

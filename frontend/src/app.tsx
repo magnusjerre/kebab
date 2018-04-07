@@ -52,12 +52,14 @@ export class App extends React.Component<any, IAppState> {
             chosenDishId: "",
             createNewShop: false,
             createNewDish: false,
+            isLoggedIn: false
         };
 
         this.selectDish = this.selectDish.bind(this);
         this.selectShop = this.selectShop.bind(this);
         this.setCreateNewShop = this.setCreateNewShop.bind(this);
         this.setCreateNewDish = this.setCreateNewDish.bind(this);
+        this.setLoggedInState = this.setLoggedInState.bind(this);
     }
 
     componentWillMount() {
@@ -96,16 +98,23 @@ export class App extends React.Component<any, IAppState> {
         });
     }
 
+    setLoggedInState = (newState: boolean) => {
+        this.setState({
+            ...this.state,
+            isLoggedIn: newState
+        });
+    }
+
     render() {
         var shopId = this.state.chosenShopId;
         var dishList = this.state.dishes.filter(dish => dish.shopId == shopId);
         return (
             <div>
-                <LoginHeader />
-                <ShopList createNewShop={() => this.setCreateNewShop(true)} shops={this.state.shops} selectShop={this.selectShop}/>
+                <LoginHeader loggedInState={this.setLoggedInState}/>
+                <ShopList createNewShop={() => this.setCreateNewShop(true)} isLoggedIn={this.state.isLoggedIn} shops={this.state.shops} selectShop={this.selectShop}/>
                 {
                     this.state.chosenShopId &&
-                    <DishList createNewDish={() => this.setCreateNewDish(true)} dishes={dishList} selectDish={this.selectDish} />
+                    <DishList createNewDish={() => this.setCreateNewDish(true)} dishes={dishList} isLoggedIn={this.state.isLoggedIn} selectDish={this.selectDish} />
                 }
                 <img src={pluss}/>
 

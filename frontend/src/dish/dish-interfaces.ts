@@ -12,6 +12,7 @@ export interface IDishElement {
 export interface IDishList {
     createNewDish: VoidFunction
     dishes: Dish[]
+    isLoggedIn: boolean
     selectDish: ISelectDish
 }
 

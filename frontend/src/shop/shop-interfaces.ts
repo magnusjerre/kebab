@@ -11,6 +11,7 @@ export interface IShopElement {
 
 export interface IShopList {
     createNewShop: VoidFunction
+    isLoggedIn: boolean
     selectShop: ISelectShop
     shops: Shop[]
 }
