@@ -27,6 +27,12 @@ label {
     display: block;
 }
 
+h1 {
+    margin-top: 0;
+    margin-bottom: 0.25em;
+    text-align: center;
+}
+
 .app {
     max-width: 25em;
     margin-left: auto;
@@ -51,6 +57,7 @@ label {
 }
 
 .list-element {
+    margin-top: 0.25em;
     margin-bottom: 0.25em;
     padding: 0 $basePadding;
     background-color: $listElementBackgroundColor;
@@ -60,11 +67,14 @@ label {
         color: black;
         font-style: italic;
     }
+
+    h2 {
+        margin-top: 0;
+    }
 }
 
 .container {
-    padding: 0.25em;
-    margin: 0.25em;
+    margin-top: 0.25em;
 }
 
 .enum-list {
@@ -227,4 +237,25 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
     .kebab-input {
         margin-left: 0.25em;
     }
+}
+
+.sub-header {
+    height: 2em;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 0.25em 0;
+}
+
+.sub-sub-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+}
+
+.back-button {
+    position: absolute;
+    z-index: $z-ntopmost;
 }

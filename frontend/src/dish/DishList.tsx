@@ -5,7 +5,6 @@ import { DishElement } from "./DishElement";
 
 export const DishList : React.StatelessComponent<IDishList> = ({createNewDish, dishes, isLoggedIn, selectDish}) => (
     <div className="container" >
-        <h1>Retter</h1>
         { isLoggedIn && <button className="kebab-button" onClick={() => createNewDish()}>Ny rett?</button> }
         {
             dishes.map(dish => (

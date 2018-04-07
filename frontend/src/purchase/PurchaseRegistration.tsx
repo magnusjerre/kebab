@@ -100,9 +100,7 @@ export class PurchaseRegistration extends React.Component<IPurchase, PurchasePos
         const selectedPriceSize = this.props.dish.priceSizes.filter(ps => ps.size.size == purchaseInfo.size)[0]; 
         return (
             <div>
-                <h2>Gjennomfør kjøp</h2>
                 <div className="card">
-                    <h2>Hva har du kjøpt?</h2>
                     <PriceSizeList idBase="price-size" select={this.setPriceSize} selected={selectedPriceSize} title="Pris / størrelse" values={this.props.dish.priceSizes}/>
                     <EnumListComponent enumToString={strengthToStringName} idBase="pi-strength" select={this.setPurchaseStrength} selected={purchaseInfo.strength} title="Styrke" values={strengthValues}/>
                 </div>

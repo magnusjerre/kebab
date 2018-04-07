@@ -61,7 +61,6 @@ export class DishEdit extends React.Component<IDishEditProps, IDishEdit> {
     render() {
         return (
             <div className="dish">
-                <h2>Ny rett</h2>
                 <label htmlFor="name">Navn <input type="text" required={true} id="name" name="name" value={this.state.name} onChange={this.setName}/></label>
 
                 <EnumListComponent enumToString={(val: any) => val ? "Ja" : "Nei"} idBase="vegetarian" select={this.setVegetarian} title="Vegetar?" values={[true, false]} selected={this.state.vegetarian}/>

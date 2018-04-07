@@ -48,7 +48,6 @@ export class ShopEdit extends React.Component<IShopEditProps, IShopRegistration>
     render() {
         return (
             <div className="card">
-                <h2>Ny sjappe</h2>
                 <label className="inline-label" htmlFor="new-shop-name">Navn 
                     <input type="text" id="new-shop-name" name="new-shop-name" required={true} onChange={this.saveName} />
                 </label>

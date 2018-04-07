@@ -68,13 +68,3 @@ export enum StrengthEnum {
 export enum DeliveryTime {
     SLOW, OK, FAST
 }
-
-export interface IAppState {
-    shops: Shop[]
-    dishes: Dish[]
-    chosenShopId: string
-    chosenDishId: string
-    createNewShop: boolean
-    createNewDish: boolean
-    isLoggedIn: boolean
-}
