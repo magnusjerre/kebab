@@ -2,6 +2,7 @@ import * as React from "react";
 import { LoginEnum, ILoggedInHeader, ILoggedOutHeader } from "./user-interfaces";
 import { LoginComponent } from "./Login";
 import { handleCsrf, fetchCsrf } from "../utils";
+import { RegisterUserComponent } from "./register-user";
 
 const LoggedInHeader : React.StatelessComponent<ILoggedInHeader> = ({enabled, username, logout}) => {
     const clazz = "kebab-button" + (enabled ?  "" : " kebab-button-disabled");
@@ -45,6 +46,8 @@ export class LoginHeader extends React.Component<{}, ILoginHeader> {
         this.login = this.login.bind(this);
         this.loginSuccess = this.loginSuccess.bind(this);
         this.cancelLoginView = this.cancelLoginView.bind(this);
+        this.register = this.register.bind(this);
+        this.registerSuccess = this.registerSuccess.bind(this);
     }
 
     logout() {
@@ -84,6 +87,14 @@ export class LoginHeader extends React.Component<{}, ILoginHeader> {
         });
     }
 
+    register = () => {
+        this.setState({
+            ...this.state,
+            enableHeaderInputs: false,
+            contentView: LoginContentView.SHOW_REGISTER
+        });
+    }
+
     loginSuccess = (username: string) => {
         this.setState({
             ...this.state,
@@ -103,11 +114,20 @@ export class LoginHeader extends React.Component<{}, ILoginHeader> {
         });
     }
 
+    registerSuccess = () => {
+        this.setState({
+            ...this.state,
+            enableHeaderInputs: false,
+            contentView: LoginContentView.SHOW_LOGIN,
+            headerView: HeaderView.SHOW_LOGGED_OUT
+        });
+    }
+
     render() {
         const header = this.state.headerView == HeaderView.SHOW_LOGGED_OUT ? 
-            <LoggedOutHeader login={() => this.login()} register={() => {}} enabled={this.state.enableHeaderInputs}/> 
+            <LoggedOutHeader login={() => this.login()} register={this.register} enabled={this.state.enableHeaderInputs}/> 
             : <LoggedInHeader username={this.state.username} logout={this.logout} enabled={this.state.enableHeaderInputs} />
-        const content : any = this.state.contentView == LoginContentView.SHOW_LOGIN ? <LoginComponent onLoginSuccess={this.loginSuccess} onCancel={this.cancelLoginView}/> : null;
+        const content : any = this.state.contentView == LoginContentView.SHOW_LOGIN ? <LoginComponent onLoginSuccess={this.loginSuccess} onCancel={this.cancelLoginView}/> : ( this.state.contentView == LoginContentView.SHOW_REGISTER ? <RegisterUserComponent onRegisterSuccess={this.registerSuccess} onCancel={this.cancelLoginView}/>: null);
         return (
             <div className="login-header-container">
                 { header }
