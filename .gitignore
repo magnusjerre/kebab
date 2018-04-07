@@ -45,3 +45,4 @@ nbdist/
 .DS_Store
 
 /out/
+.vscode/

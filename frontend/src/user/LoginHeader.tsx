@@ -44,6 +44,7 @@ export class LoginHeader extends React.Component<{}, ILoginHeader> {
         this.logout = this.logout.bind(this);
         this.login = this.login.bind(this);
         this.loginSuccess = this.loginSuccess.bind(this);
+        this.cancelLoginView = this.cancelLoginView.bind(this);
     }
 
     logout() {
@@ -93,11 +94,20 @@ export class LoginHeader extends React.Component<{}, ILoginHeader> {
         });
     }
 
+    cancelLoginView = () => {
+        this.setState({
+            ...this.state,
+            enableHeaderInputs: true,
+            contentView: LoginContentView.NONE,
+            headerView: HeaderView.SHOW_LOGGED_OUT
+        });
+    }
+
     render() {
         const header = this.state.headerView == HeaderView.SHOW_LOGGED_OUT ? 
             <LoggedOutHeader login={() => this.login()} register={() => {}} enabled={this.state.enableHeaderInputs}/> 
             : <LoggedInHeader username={this.state.username} logout={this.logout} enabled={this.state.enableHeaderInputs} />
-        const content : any = this.state.contentView == LoginContentView.SHOW_LOGIN ? <LoginComponent onLoginSuccess={this.loginSuccess} /> : null;
+        const content : any = this.state.contentView == LoginContentView.SHOW_LOGIN ? <LoginComponent onLoginSuccess={this.loginSuccess} onCancel={this.cancelLoginView}/> : null;
         return (
             <div className="login-header-container">
                 { header }
