@@ -7,6 +7,9 @@ export const ShopList : React.StatelessComponent<IShopList> = ({createNewShop, i
     <div className="container" >
         { isLoggedIn && <button className="kebab-button" onClick={() => createNewShop()}>Ny butikk?</button> }
         {
+            shops.length == 0 && <p>Det er ikke registrert en eneste sjappe!</p>
+        }
+        {
             shops.map(shop => (
                 <ShopElement shop={shop} selectShop={selectShop} />
             ))

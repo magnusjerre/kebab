@@ -7,6 +7,9 @@ export const DishList : React.StatelessComponent<IDishList> = ({createNewDish, d
     <div className="container" >
         { isLoggedIn && <button className="kebab-button" onClick={() => createNewDish()}>Ny rett?</button> }
         {
+            dishes.length == 0 && <p>Det er ikke registrert en eneste babb!</p>
+        }
+        {
             dishes.map(dish => (
                 <DishElement dish={dish} selectDish={selectDish} />
             ))

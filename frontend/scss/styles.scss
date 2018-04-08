@@ -57,19 +57,43 @@ h1 {
 }
 
 .list-element {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border: none;
+    border-radius: 0.5em;
     margin-top: 0.25em;
     margin-bottom: 0.25em;
-    padding: 0 $basePadding;
+    padding: 1em;
     background-color: $listElementBackgroundColor;
     cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color 0.25s;
     
+    &:focus {
+        background-color: $enumElementSelectedBackgroundColor;
+        transition: background-color 0.25s;
+        outline: none;
+    }
+
     p {
         color: black;
         font-style: italic;
+        margin: 0;
     }
 
     h2 {
         margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+@keyframes fade {
+    from {
+        background-color: $enumElementColor;
+    }
+    to {
+        background-color: $enumElementSelectedBackgroundColor;
     }
 }
 
