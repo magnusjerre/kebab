@@ -2,10 +2,12 @@ import * as React from "react";
 import { IEnumListComponent } from "./purchase-interface";
 import { EnumElementRadio } from "./EnumElement";
 
-export const EnumListComponent : React.StatelessComponent<IEnumListComponent> = ({enumToString, idBase, select, selected, title, values}) => { 
+export const EnumListComponent : React.StatelessComponent<IEnumListComponent> = ({enumToString, idBase, select, selected, title = "", values}) => { 
     return (
-        <div>
-            <h3>{title}</h3>
+        <div className="enum-list-container">
+            {
+                title != "" && <h3 className="enum-title">{title}</h3>
+            }
             <div className="enum-list">
                 {
                     values.map((val, pos) => 

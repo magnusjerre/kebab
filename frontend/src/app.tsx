@@ -162,7 +162,7 @@ export class App extends React.Component<any, IAppState> {
                     view == AppContentView.DISH_EDIT && <DishEdit dish={null} shopId={this.state.chosenShopId} done={() => { this.setCreateNewDish(false); fetchDishes(this); }}/>
                 }
                 {
-                    view == AppContentView.PURCHASE && <PurchaseRegistration dish={this.state.dishes.filter(dish => dish.id === this.state.chosenDishId)[0]} maxGrade={5} />
+                    view == AppContentView.PURCHASE && <PurchaseRegistration cancel={this.goBack} dish={this.state.dishes.filter(dish => dish.id === this.state.chosenDishId)[0]} maxGrade={5} />
                 }
             </div>
         );

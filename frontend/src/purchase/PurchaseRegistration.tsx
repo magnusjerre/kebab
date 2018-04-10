@@ -101,18 +101,19 @@ export class PurchaseRegistration extends React.Component<IPurchase, PurchasePos
         return (
             <div>
                 <div className="card">
-                    <PriceSizeList idBase="price-size" select={this.setPriceSize} selected={selectedPriceSize} title="Pris / størrelse" values={this.props.dish.priceSizes}/>
-                    <EnumListComponent enumToString={strengthToStringName} idBase="pi-strength" select={this.setPurchaseStrength} selected={purchaseInfo.strength} title="Styrke" values={strengthValues}/>
+                    <h2 className="title">Hva kjøpte du?</h2>
+                    <PriceSizeList idBase="price-size" select={this.setPriceSize} selected={selectedPriceSize} values={this.props.dish.priceSizes}/>
+                    <EnumListComponent enumToString={strengthToStringName} idBase="pi-strength" select={this.setPurchaseStrength} selected={purchaseInfo.strength} title="" values={strengthValues}/>
                 </div>
                 <div className="card">
-                    <h2>Hva synes du?</h2>
-                    <label htmlFor="rating">Karakter <input type="number" id="rating" name="ratin" max={this.props.maxGrade} min={0} value={ratingInfo.rating.value} onChange={this.setGrade} /></label>
+                    <h2 className="title">Hva synes du?</h2>
+                    <label htmlFor="rating" className="rating-label">Karakter <input type="number" id="rating" name="rating" max={this.props.maxGrade} min={0} value={ratingInfo.rating.value} onChange={this.setGrade} /></label>
                     
                     <EnumListComponent enumToString={deliveryTimeToStringName} idBase="ri-delivery-time" select={this.setDeliveryTime} selected={ratingInfo.deliveryTime} title="Leveringstid" values={deliveryTimes} />
                     
                     <EnumListComponent enumToString={strengthToStringName} idBase="ri-strength" select={this.setRatingStrength} selected={ratingInfo.strength} title="Styrke" values={strengthValues}/>
                 </div>
-                <button onClick={() => {
+                <button className="kebab-button-large" onClick={() => {
                     fetchCsrf().then((csrf: string) => {
                         fetch("/api/closed/purchase", {
                             method: "POST",
@@ -125,6 +126,7 @@ export class PurchaseRegistration extends React.Component<IPurchase, PurchasePos
                         })
                     });
                 }}>Registrer</button>
+                <button className="kebab-button-large" onClick={this.props.cancel} >Avbryt</button>
             </div>
         );
     }

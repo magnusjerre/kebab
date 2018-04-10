@@ -1,6 +1,7 @@
 import { Dish, StrengthEnum, PriceSizeFrontend } from "../models";
 
 export interface IPurchase {
+    cancel?: VoidFunction
     dish: Dish
     maxGrade: number
 }
@@ -62,6 +63,5 @@ export interface IPriceSizeList {
     idBase: string
     select: IPriceSizeSelect
     selected: PriceSizeFrontend
-    title: string
     values: PriceSizeFrontend[]
 }
