@@ -3,38 +3,21 @@ import { LoginEnum, ILoggedInHeader, ILoggedOutHeader } from "./user-interfaces"
 import { LoginComponent } from "./Login";
 import { handleCsrf, fetchCsrf } from "../utils";
 import { RegisterUserComponent } from "./register-user";
+import { ListUserInfo } from "./list-user-info";
 
-const LoggedInHeader : React.StatelessComponent<ILoggedInHeader> = ({enabled, username, logout}) => {
-    const clazz = "kebab-button" + (enabled ?  "" : " kebab-button-disabled");
-    return (
-        <div className="user-header">
-            <span className="user-header-username">{username}</span>
-            <button className={clazz} onClick={() => { if (enabled) { logout() }}}>Logg ut</button>
-        </div>
-    );
-}
-
-const LoggedOutHeader : React.StatelessComponent<ILoggedOutHeader> = ({login, register, enabled}) => {
-    const clazz = "kebab-button" + (enabled ? "" : " kebab-button-disabled");
-    return (
-        <div className="user-header">
-            <button className={clazz} onClick={() => { if (enabled) { login() }}}>Logg inn</button>
-            <button className={clazz} onClick={() => { if (enabled) { register() }}}>Opprett bruker</button>
-        </div>
-    );
-}
-
-enum HeaderView { SHOW_LOGGED_IN, SHOW_LOGGED_OUT }
-enum LoginContentView { NONE, SHOW_LOGIN, SHOW_REGISTER }
+enum LoginContentView { NONE, SHOW_LOGIN, SHOW_REGISTER, SHOW_MENU }
 interface ILoginHeader {
-    headerView: HeaderView
     contentView: LoginContentView
     username: string
+    isLoggedIn: boolean
     enableHeaderInputs: boolean
 }
 
 export interface ILoginHeaderProps {
     loggedInState: (value: boolean) => void
+    title: string
+    onGoBack: VoidFunction
+    showGoBack: boolean
 }
 
 export class LoginHeader extends React.Component<ILoginHeaderProps, ILoginHeader> {
@@ -42,9 +25,9 @@ export class LoginHeader extends React.Component<ILoginHeaderProps, ILoginHeader
         super(props);
         this.state = {
             enableHeaderInputs: true,
-            headerView: HeaderView.SHOW_LOGGED_OUT,
             contentView: LoginContentView.NONE,
-            username: ""
+            username: "",
+            isLoggedIn: false
         }
         this.logout = this.logout.bind(this);
         this.login = this.login.bind(this);
@@ -52,6 +35,7 @@ export class LoginHeader extends React.Component<ILoginHeaderProps, ILoginHeader
         this.cancelLoginView = this.cancelLoginView.bind(this);
         this.register = this.register.bind(this);
         this.registerSuccess = this.registerSuccess.bind(this);
+        this.toggleMenu = this.toggleMenu.bind(this);
     }
 
     logout() {
@@ -72,12 +56,11 @@ export class LoginHeader extends React.Component<ILoginHeaderProps, ILoginHeader
             .then((response: Response) => {
                 handleCsrf(response);
                 this.props.loggedInState(false);
-                const headerView = response.status < 400 ? HeaderView.SHOW_LOGGED_OUT : HeaderView.SHOW_LOGGED_OUT;
                 this.setState({
                     ...this.state,
                     enableHeaderInputs: true,
                     contentView: LoginContentView.NONE,
-                    headerView: headerView,
+                    isLoggedIn: false,
                     username: ""
                 });
             });
@@ -105,7 +88,7 @@ export class LoginHeader extends React.Component<ILoginHeaderProps, ILoginHeader
             ...this.state,
             enableHeaderInputs: true,
             contentView: LoginContentView.NONE,
-            headerView: HeaderView.SHOW_LOGGED_IN,
+            isLoggedIn: true,
             username
         });
         this.props.loggedInState(true);
@@ -116,7 +99,6 @@ export class LoginHeader extends React.Component<ILoginHeaderProps, ILoginHeader
             ...this.state,
             enableHeaderInputs: true,
             contentView: LoginContentView.NONE,
-            headerView: HeaderView.SHOW_LOGGED_OUT
         });
     }
 
@@ -125,18 +107,36 @@ export class LoginHeader extends React.Component<ILoginHeaderProps, ILoginHeader
             ...this.state,
             enableHeaderInputs: false,
             contentView: LoginContentView.SHOW_LOGIN,
-            headerView: HeaderView.SHOW_LOGGED_OUT
         });
     }
 
+    toggleMenu = () => {
+        if (this.state.contentView == LoginContentView.SHOW_MENU) {
+            this.setState({
+                ...this.state,
+                contentView: LoginContentView.NONE
+            });
+        } else {
+            this.setState({
+                ...this.state,
+                contentView: LoginContentView.SHOW_MENU
+            });
+        }
+    }
+
     render() {
-        const header = this.state.headerView == HeaderView.SHOW_LOGGED_OUT ? 
-            <LoggedOutHeader login={() => this.login()} register={this.register} enabled={this.state.enableHeaderInputs}/> 
-            : <LoggedInHeader username={this.state.username} logout={this.logout} enabled={this.state.enableHeaderInputs} />
-        const content : any = this.state.contentView == LoginContentView.SHOW_LOGIN ? <LoginComponent onLoginSuccess={this.loginSuccess} onCancel={this.cancelLoginView}/> : ( this.state.contentView == LoginContentView.SHOW_REGISTER ? <RegisterUserComponent onRegisterSuccess={this.registerSuccess} onCancel={this.cancelLoginView}/>: null);
+        const content : any = this.state.contentView == LoginContentView.SHOW_LOGIN ? <LoginComponent onLoginSuccess={this.loginSuccess} onCancel={this.cancelLoginView}/> : ( this.state.contentView == LoginContentView.SHOW_REGISTER ? <RegisterUserComponent onRegisterSuccess={this.registerSuccess} onCancel={this.cancelLoginView}/>: ( this.state.contentView == LoginContentView.SHOW_MENU ? <ListUserInfo isLoggedIn={this.state.isLoggedIn} onLoginClicked={this.login} onLogoutClicked={this.logout} onRegisterClicked={this.register} username={this.state.username}/> : null));
         return (
             <div className="login-header-container">
-                { header }
+                <div className="user-header">
+                    <div className="nav-button-container">
+                        { this.props.showGoBack && <button onClick={() => this.props.onGoBack()} className="kebab-button">Back</button> }
+                    </div>
+                    <h1>{this.props.title}</h1>
+                    <div className="nav-button-container">
+                        <button className="user-icon" onClick={this.toggleMenu}></button>
+                    </div>
+                </div>
                 { content }
             </div>
         );

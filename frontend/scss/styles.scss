@@ -328,3 +328,59 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
     margin-bottom: 1em;
     font-weight: bold;
 }
+
+.nav-button-container {
+    width: 3em;
+    height: 1.5em;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.user-icon {
+    background-color: darkviolet;
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 1.5em;
+    outline: none;
+    border: none;
+    align-self: flex-end;
+}
+
+.lui-list {
+    position: absolute;
+    z-index: $z-ntopmost;
+    padding: 0;
+    margin: 0;
+    background-color: $header-background;
+    box-shadow: 0 1.5em 1em -1em $shadow-color;
+    width: 100%;
+    text-align: center;
+    font-size: 1.25em;
+
+    
+    li {
+        display: block;
+        padding: 0.5em;
+        font-weight: bold;
+        margin: 0 1em;
+        &:not(:last-of-type) {
+            border-bottom: solid 0.1em gray;
+        }
+    }
+
+    .username {
+        font-weight: bold;
+        // font-size: 1.5em;
+        text-transform: uppercase;
+        font-style: italic;
+        color: dimgray;
+    }
+}
+
+.hide-stuff {
+    height: 100%;
+    width: 100%;
+    background-color: black;
+}

@@ -142,13 +142,7 @@ export class App extends React.Component<any, IAppState> {
         var showBackButton = this.state.contentView.length > 1;
         return (
             <div className="app">
-                <LoginHeader loggedInState={this.setLoggedInState}/>
-                <div className="sub-header">
-                    {
-                        showBackButton && <button className="kebab-button back-button" onClick={this.goBack}>Tilbake</button>
-                    }
-                    <div className="sub-sub-header"><h1>{this.getTitle()}</h1></div>
-                </div>
+                <LoginHeader loggedInState={this.setLoggedInState} title={this.getTitle()} showGoBack={showBackButton} onGoBack={this.goBack}/>
                 {
                     view == AppContentView.SHOPS && <ShopList createNewShop={() => this.setCreateNewShop(true)} isLoggedIn={this.state.isLoggedIn} shops={this.state.shops} selectShop={this.selectShop}/>
                 }
