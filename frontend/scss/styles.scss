@@ -10,10 +10,11 @@ $enumElementSelectedBackgroundColor: burlywood;
 $z-topmost: 20;
 $z-ntopmost: 15;
 
-$header-background: lightcyan;
+$header-background: white;
 $shadow-color: gray;
 
 $button-focus-background: chocolate;
+$blur-radius: 5px;
 
 body {
     background-color: $mainBackgroundColor;
@@ -31,6 +32,7 @@ h1 {
     margin-top: 0;
     margin-bottom: 0.25em;
     text-align: center;
+    text-transform: uppercase;
 }
 
 .app {
@@ -118,6 +120,9 @@ h1 {
 
 .container {
     margin-top: 0.25em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .enum-list {
@@ -172,6 +177,7 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
 .kebab-button {
     background-color: $enumElementSelectedBackgroundColor;
     border: 2px solid $enumElementSelectedBorderColor;
+    padding: 1em;
 
     &:focus {
         outline-width: 1em;
@@ -212,6 +218,8 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
 
 .login-header-container {
     width: 100%;
+    margin-top: 1em;
+    margin-bottom: 1em;
 }
 
 .user-header {
@@ -219,7 +227,6 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 2em;
     margin: 0;
     padding: 0.5em 0.25em;
     background-color: $header-background;
@@ -331,7 +338,6 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
 
 .nav-button-container {
     width: 3em;
-    height: 1.5em;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
@@ -340,8 +346,8 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
 
 .user-icon {
     background-color: darkviolet;
-    width: 1.5em;
-    height: 1.5em;
+    width: 3em;
+    height: 3em;
     border-radius: 1.5em;
     outline: none;
     border: none;
@@ -383,4 +389,13 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
     height: 100%;
     width: 100%;
     background-color: black;
+}
+
+.blur-background {
+    pointer-events: none;
+    filter: blur($blur-radius);
+    -webkit-filter: blur($blur-radius);
+    -moz-filter: blur($blur-radius);
+    -o-filter: blur($blur-radius);
+    -ms-filter: blur($blur-radius);
 }

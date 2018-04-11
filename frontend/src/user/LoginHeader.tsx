@@ -15,6 +15,7 @@ interface ILoginHeader {
 
 export interface ILoginHeaderProps {
     loggedInState: (value: boolean) => void
+    onShowMenu: (value: boolean) => void
     title: string
     onGoBack: VoidFunction
     showGoBack: boolean
@@ -92,6 +93,7 @@ export class LoginHeader extends React.Component<ILoginHeaderProps, ILoginHeader
             username
         });
         this.props.loggedInState(true);
+        this.props.onShowMenu(false);
     }
 
     cancelLoginView = () => {
@@ -100,6 +102,7 @@ export class LoginHeader extends React.Component<ILoginHeaderProps, ILoginHeader
             enableHeaderInputs: true,
             contentView: LoginContentView.NONE,
         });
+        this.props.onShowMenu(false);
     }
 
     registerSuccess = () => {
@@ -108,6 +111,7 @@ export class LoginHeader extends React.Component<ILoginHeaderProps, ILoginHeader
             enableHeaderInputs: false,
             contentView: LoginContentView.SHOW_LOGIN,
         });
+        this.props.onShowMenu(false);
     }
 
     toggleMenu = () => {
@@ -116,11 +120,13 @@ export class LoginHeader extends React.Component<ILoginHeaderProps, ILoginHeader
                 ...this.state,
                 contentView: LoginContentView.NONE
             });
+            this.props.onShowMenu(false);
         } else {
             this.setState({
                 ...this.state,
                 contentView: LoginContentView.SHOW_MENU
             });
+            this.props.onShowMenu(true);
         }
     }
 
@@ -130,7 +136,10 @@ export class LoginHeader extends React.Component<ILoginHeaderProps, ILoginHeader
             <div className="login-header-container">
                 <div className="user-header">
                     <div className="nav-button-container">
-                        { this.props.showGoBack && <button onClick={() => this.props.onGoBack()} className="kebab-button">Back</button> }
+                        { this.props.showGoBack && <button onClick={() => { 
+                            this.props.onGoBack();
+                            if (this.state.contentView == LoginContentView.SHOW_MENU) this.toggleMenu();
+                            }} className="kebab-button">Back</button> }
                     </div>
                     <h1>{this.props.title}</h1>
                     <div className="nav-button-container">

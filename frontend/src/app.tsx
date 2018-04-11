@@ -24,6 +24,7 @@ interface IAppState {
     chosenDishId: string
     contentView: AppContentView[]
     isLoggedIn: boolean
+    blurContent: boolean
 }
 
 export class App extends React.Component<any, IAppState> {
@@ -35,13 +36,15 @@ export class App extends React.Component<any, IAppState> {
             chosenShopId: "",
             chosenDishId: "",
             contentView: [AppContentView.SHOPS],
-            isLoggedIn: false
+            isLoggedIn: false,
+            blurContent: false
         };
 
         this.getTitle = this.getTitle.bind(this);
         this.goBack = this.goBack.bind(this);
         this.selectDish = this.selectDish.bind(this);
         this.selectShop = this.selectShop.bind(this);
+        this.setBlurState = this.setBlurState.bind(this);
         this.setCreateNewShop = this.setCreateNewShop.bind(this);
         this.setCreateNewDish = this.setCreateNewDish.bind(this);
         this.setLoggedInState = this.setLoggedInState.bind(this);
@@ -100,6 +103,13 @@ export class App extends React.Component<any, IAppState> {
         });
     }
 
+    setBlurState = (doBlur: boolean) => {
+        this.setState({
+            ...this.state,
+            blurContent: doBlur
+        });
+    }
+
     goBack = () => {
         const contentViewHistory = [...this.state.contentView];
         if (contentViewHistory.length == 1) {
@@ -140,9 +150,11 @@ export class App extends React.Component<any, IAppState> {
         var dishList = this.state.dishes.filter(dish => dish.shopId == shopId);
         var view = this.state.contentView[0];
         var showBackButton = this.state.contentView.length > 1;
+        const contentClass = this.state.blurContent ? "blur-background" : "";
         return (
             <div className="app">
-                <LoginHeader loggedInState={this.setLoggedInState} title={this.getTitle()} showGoBack={showBackButton} onGoBack={this.goBack}/>
+                <LoginHeader loggedInState={this.setLoggedInState} title={this.getTitle()} showGoBack={showBackButton} onGoBack={this.goBack} onShowMenu={this.setBlurState}/>
+                <div className={contentClass}>
                 {
                     view == AppContentView.SHOPS && <ShopList createNewShop={() => this.setCreateNewShop(true)} isLoggedIn={this.state.isLoggedIn} shops={this.state.shops} selectShop={this.selectShop}/>
                 }
@@ -158,6 +170,7 @@ export class App extends React.Component<any, IAppState> {
                 {
                     view == AppContentView.PURCHASE && <PurchaseRegistration cancel={this.goBack} dish={this.state.dishes.filter(dish => dish.id === this.state.chosenDishId)[0]} maxGrade={5} />
                 }
+                </div>
             </div>
         );
     }
