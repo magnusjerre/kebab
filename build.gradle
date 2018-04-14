@@ -24,11 +24,6 @@ group = 'com.jerre'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
-jar {
-	baseName = 'gs-securing-web'
-	version = '0.1.0'
-}
-
 compileKotlin {
 	kotlinOptions {
 		freeCompilerArgs = ["-Xjsr305=strict"]
@@ -46,6 +41,34 @@ repositories {
 	mavenCentral()
 }
 
+task(copyHerokuProperties, type: Copy, dependsOn: ['clean']) {
+	from "config_sources"
+	into "config"
+	include "application_heroku.properties"
+	rename("application_heroku.properties", "application.properties")
+	doLast {
+		println "#### heroku properties copied ####"
+	}
+}
+
+task copyLocalMLabProperties(type: Copy) {
+	from "config_sources"
+	into "config"
+	include "application_local_mlab.properties"
+	rename("application_local_mlab.properties", "application.properties")
+}
+
+task copyLocalMongoProperties(type: Copy) {
+	from "config_sources"
+	into "config"
+	include "application_local_mongo.properties"
+	rename("application_local_mongo.properties", "application.properties")
+}
+
+task stage(type: Copy, dependsOn: [copyHerokuProperties, build]) {
+	//Using an empty stage-task is enough to correctly build for heroku
+}
+stage.mustRunAfter(clean)
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-rest')
