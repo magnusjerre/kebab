@@ -16,6 +16,10 @@ $shadow-color: gray;
 $button-focus-background: chocolate;
 $blur-radius: 5px;
 
+$small: "(min-resolution: 120dpi), (min-device-pixel-ratio: 2), (-webkit-min-device-pixel-ratio: 2), (max-width: 600px)";
+
+$phone: "(min-resolution: 100dpi), (min-device-pixel-ratio: 2), (-webkit-min-device-pixel-ratio: 2)";
+
 body {
     background-color: $mainBackgroundColor;
 }
@@ -36,7 +40,12 @@ h1 {
 }
 
 .app {
-    max-width: 25em;
+    width: 25em;
+
+    @media #{$small} {
+        width: 100%;
+    }
+
     margin-left: auto;
     margin-right: auto;
     position: relative;
@@ -55,6 +64,10 @@ h1 {
 .card {
     padding: 1em;
     margin-bottom: 1em;
+
+    @media #{$phone} {
+        font-size: 2.5em;
+    }
 
     .title {
         margin-top: 0;
@@ -84,6 +97,10 @@ h1 {
     box-sizing: border-box;
     transition: color 0.25s;
     outline: none;
+
+    @media #{$phone} {
+        font-size: 2em;
+    }
     
     &:focus, &:hover {
         transition: color 0.25s, border-bottom-color sienna;
@@ -179,6 +196,10 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
     border: 2px solid $enumElementSelectedBorderColor;
     padding: 1em;
 
+    @media #{$phone} {
+        font-size: 2.5em;
+    }
+
     &:focus {
         outline-width: 1em;
         outline-color: black;
@@ -233,6 +254,12 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
     z-index: $z-topmost;
     position: relative;
     box-sizing: border-box;
+
+    h1 {
+        @media #{$phone} {
+            font-size: 5em;
+        }
+    }
 
     &-username {
         font-weight: bold;
@@ -289,9 +316,11 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
 .kebab-label {
     margin: 0.5em 0;
     font-weight: bold;
+    font-size: 3em;
 
     .kebab-input {
         margin-left: 0.25em;
+        font-size: 1em;
     }
 }
 
@@ -334,6 +363,9 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
 .rating-label {
     margin-bottom: 1em;
     font-weight: bold;
+    input {
+        font-size: 1em;
+    }
 }
 
 .nav-button-container {
@@ -365,6 +397,9 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
     text-align: center;
     font-size: 1.25em;
 
+    @media #{$phone} {
+        font-size: 3em;
+    }
     
     li {
         display: block;
