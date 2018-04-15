@@ -1,4 +1,5 @@
 import { Dish, PriceSizeFrontend } from "../models";
+import { isNullOrUndefined } from "util";
 
 interface ISelectDish {
     (dishId: string):void
@@ -6,6 +7,7 @@ interface ISelectDish {
 
 export interface IDishElement {
     dish: Dish
+    isLoggedIn: boolean
     selectDish: ISelectDish
 }
 

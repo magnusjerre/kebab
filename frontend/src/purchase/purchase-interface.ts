@@ -4,6 +4,7 @@ export interface IPurchase {
     cancel?: VoidFunction
     dish: Dish
     maxGrade: number
+    onRegistered: VoidFunction
 }
 
 export interface IStrengthElement {

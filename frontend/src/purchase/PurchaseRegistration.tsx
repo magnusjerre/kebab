@@ -123,7 +123,9 @@ export class PurchaseRegistration extends React.Component<IPurchase, PurchasePos
                                 'X-CSRF-TOKEN': csrf,
                             },
                             body: JSON.stringify(this.state)
-                        })
+                        }).then((response: Response) => {
+                            this.props.onRegistered();
+                        });
                     });
                 }}>Registrer</button>
                 <button className="kebab-button-large" onClick={this.props.cancel} >Avbryt</button>

@@ -11,7 +11,7 @@ export const DishList : React.StatelessComponent<IDishList> = ({createNewDish, d
         }
         {
             dishes.map(dish => (
-                <DishElement dish={dish} selectDish={selectDish} />
+                <DishElement dish={dish} isLoggedIn={isLoggedIn} selectDish={selectDish} />
             ))
         }
     </div>

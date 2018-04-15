@@ -159,16 +159,16 @@ export class App extends React.Component<any, IAppState> {
                     view == AppContentView.SHOPS && <ShopList createNewShop={() => this.setCreateNewShop(true)} isLoggedIn={this.state.isLoggedIn} shops={this.state.shops} selectShop={this.selectShop}/>
                 }
                 {
-                    view == AppContentView.SHOP_EDIT && <ShopEdit id={null} name="" address="" done={() => { this.setCreateNewShop(false); fetchShops(this); }}/>
+                    view == AppContentView.SHOP_EDIT && <ShopEdit id={null} name="" address="" done={() => { this.goBack(); fetchShops(this); }}/>
                 }
                 {
                     view == AppContentView.DISHES && <DishList createNewDish={() => this.setCreateNewDish(true)} dishes={dishList} isLoggedIn={this.state.isLoggedIn} selectDish={this.selectDish} />
                 }
                 {
-                    view == AppContentView.DISH_EDIT && <DishEdit dish={null} shopId={this.state.chosenShopId} done={() => { this.setCreateNewDish(false); fetchDishes(this); }}/>
+                    view == AppContentView.DISH_EDIT && <DishEdit dish={null} shopId={this.state.chosenShopId} done={() => { this.goBack(); fetchDishes(this); }}/>
                 }
                 {
-                    view == AppContentView.PURCHASE && <PurchaseRegistration cancel={this.goBack} dish={this.state.dishes.filter(dish => dish.id === this.state.chosenDishId)[0]} maxGrade={5} />
+                    view == AppContentView.PURCHASE && <PurchaseRegistration cancel={this.goBack} dish={this.state.dishes.filter(dish => dish.id === this.state.chosenDishId)[0]} maxGrade={5} onRegistered={this.goBack}/>
                 }
                 </div>
             </div>
