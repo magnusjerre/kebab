@@ -25,7 +25,7 @@ export class PurchaseRegistration extends React.Component<IPurchase, PurchasePos
             },
             ratingInfo: {
                 rating: {
-                    value: 0,
+                    value: 3,
                     max: props.maxGrade
                 },
                 strength: StrengthEnum.MEDIUM,
@@ -107,7 +107,14 @@ export class PurchaseRegistration extends React.Component<IPurchase, PurchasePos
                 </div>
                 <div className="card">
                     <h2 className="title">Hva synes du?</h2>
-                    <label htmlFor="rating" className="rating-label">Karakter <input type="number" id="rating" name="rating" max={this.props.maxGrade} min={0} value={ratingInfo.rating.value} onChange={this.setGrade} /></label>
+                    <label htmlFor="rating" className="rating-label">Karakter 
+                        <div className="rating-container">
+                            <input type="range" min="1" max={this.state.ratingInfo.rating.max} value={this.state.ratingInfo.rating.value} className="rating-slider" id="rating" name="rating" onChange={this.setGrade}/>
+                            {
+                                `${this.state.ratingInfo.rating.value} / ${this.state.ratingInfo.rating.max}` 
+                            }
+                        </div>
+                    </label>
                     
                     <EnumListComponent enumToString={deliveryTimeToStringName} idBase="ri-delivery-time" select={this.setDeliveryTime} selected={ratingInfo.deliveryTime} title="Leveringstid" values={deliveryTimes} />
                     
