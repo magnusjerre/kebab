@@ -58,8 +58,17 @@ h1 {
 }
 
 .dish {
-    background-color: lightblue;
     padding: 0.25em;
+    font-size: 1em;
+
+    @media #{$phone} {
+        font-size: 3em;
+    }
+
+    .kebab-button {
+        font-size: 1em;
+        width: 100%;
+    }
 }
 
 .card {
@@ -214,26 +223,45 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
 }
 
 .price-size-element {
-    padding: 0.5em 0;
-    margin: 0.25em 0;
-    background-color: $listElementBackgroundColor;
+    margin: 0.25em 0 0.5em 0;
+    position: relative;
+    font-size: 1.5em;
     
     input[type="checkbox"] {
-        margin-right: 0.5em;
+        margin: 0;
+        @media #{$phone} {
+            position: relative;
+            top: 0.6em;
+            height: 4em;
+            width: 4em;
+        }
     }
 
-    label {
-        display: inline-block;
+    .price-size-label {
         margin-left: 0.5em;
-        margin-right: 0.25em;
+        margin-right: 1em;
+        display: inline-block;
         font-weight: bold;
+        font-size: 1em;
     }
 
-    input {
-        width: 3.5em;
+    .price-price-label {
+        display: inline-block;
+        font-weight: bold;
+        margin-right: 0.25em;
+        font-size: 1em;
+    }
+
+    input[type="number"] {
+        font-size: 1em;
+        width: 2em;
+        text-align: center;
+        border: none;
+        border-bottom: 2px solid gray;
     }
 
     .currency {
+        font-size: 1em;
         font-weight: bold;
     }
 
@@ -316,13 +344,14 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
 }
 
 .kebab-label {
-    margin: 0.5em 0;
+    margin: 0.5em 0 0 0;
     font-weight: bold;
-    font-size: 3em;
+    font-size: 1.5em;
 
     .kebab-input {
-        margin-left: 0.25em;
+        margin-top: 0.5em;
         font-size: 1em;
+        display: block;
     }
 }
 
@@ -360,6 +389,7 @@ input[type="radio"]:focus + label.enum-element, label.enum-element:focus {
 
 .enum-list-container {
     margin-bottom: 1em;
+    font-size: 1em;
 }
 
 .nav-button-container {

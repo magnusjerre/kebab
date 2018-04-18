@@ -8,8 +8,11 @@ const PriceSizeComponentElement : React.StatelessComponent<IPriceSizeComponentEl
             !hasOnlyOneSize && 
             <input type="checkbox" id={`ps-size-${pos}`} value={priceSize.size.size} checked={priceSize.checked} onChange={() => setPrice(pos, priceSize.price, !priceSize.checked)}/>
         }
-        <span>{priceSize.size.name}</span>
-        <label htmlFor={`ps-price-${pos}`}>Pris</label>
+        {
+            !hasOnlyOneSize && 
+            <label htmlFor={`ps-size-${pos}`} className="price-size-label">{priceSize.size.name}</label>
+        }
+        <label htmlFor={`ps-price-${pos}`} className="price-price-label">Pris</label>
         <input type="number" className="small-input" id={`ps-price-${pos}`} value={priceSize.price} onChange={(e: React.FormEvent<HTMLInputElement>) => setPrice(pos, parseInt(e.currentTarget.value), priceSize.checked)} />
         <span className="currency"> kr</span>
     </div>

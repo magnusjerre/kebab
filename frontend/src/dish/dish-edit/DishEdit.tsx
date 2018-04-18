@@ -5,6 +5,7 @@ import { IDishEdit, IDishEditProps } from "./../dish-interfaces";
 import { PriceSizeComponent } from "./PriceSizeCompnent";
 import { EnumListComponent } from "../../purchase/EnumListComponent";
 import { createSinglePriceSize, createMultiplePriceSizes, defaultState } from "./dish-edit-utils";
+import { Input } from "../../shared/Input";
 
 export class DishEdit extends React.Component<IDishEditProps, IDishEdit> {
     constructor(props: IDishEditProps) {
@@ -33,10 +34,10 @@ export class DishEdit extends React.Component<IDishEditProps, IDishEdit> {
         });
     }
 
-    setName(event: React.FormEvent<HTMLInputElement>) {
+    setName(value: any) {
         this.setState({
             ...this.state,
-            name: event.currentTarget.value
+            name: value
         });
     }
 
@@ -61,7 +62,7 @@ export class DishEdit extends React.Component<IDishEditProps, IDishEdit> {
     render() {
         return (
             <div className="dish">
-                <label htmlFor="name">Navn <input type="text" required={true} id="name" name="name" value={this.state.name} onChange={this.setName}/></label>
+                <Input id="name" label="Navn" name="name" onChange={this.setName} required={true} value={this.state.name}/>
 
                 <EnumListComponent enumToString={(val: any) => val ? "Ja" : "Nei"} idBase="vegetarian" select={this.setVegetarian} title="Vegetar?" values={[true, false]} selected={this.state.vegetarian}/>
 
