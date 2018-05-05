@@ -168,7 +168,7 @@ export class App extends React.Component<any, IAppState> {
                     view == AppContentView.DISH_EDIT && <DishEdit dish={null} shopId={this.state.chosenShopId} done={() => { this.goBack(); fetchDishes(this); }}/>
                 }
                 {
-                    view == AppContentView.PURCHASE && <PurchaseRegistration cancel={this.goBack} dish={this.state.dishes.filter(dish => dish.id === this.state.chosenDishId)[0]} maxGrade={5} onRegistered={this.goBack}/>
+                    view == AppContentView.PURCHASE && <PurchaseRegistration cancel={this.goBack} dish={this.state.dishes.filter(dish => dish.id === this.state.chosenDishId)[0]} maxGrade={6} onRegistered={this.goBack}/>
                 }
                 </div>
             </div>
