@@ -54,6 +54,7 @@ export interface RatingInfo {
     rating: Grade
     strength: StrengthEnum
     deliveryTime: DeliveryTime
+    comment: String
 }
 
 export interface Grade {

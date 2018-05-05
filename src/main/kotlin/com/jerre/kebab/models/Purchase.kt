@@ -14,7 +14,7 @@ data class Purchase(
 
 data class PurchaseInfo(val price: Int, val size: SizeEnum, val strength: StrengthEnum)
 
-data class RatingInfo(val rating: Grade, val strength: StrengthEnum, val deliveryTime: DeliveryTime)
+data class RatingInfo(val rating: Grade, val strength: StrengthEnum, val deliveryTime: DeliveryTime, val comment: String)
 
 data class Grade(val value: Int, val max: Int)
 

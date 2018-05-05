@@ -4,6 +4,7 @@ import { sizeToString, fetchCsrf, strengthToStringName, deliveryTimeToStringName
 import { IPurchase } from "./purchase-interface";
 import { EnumListComponent } from "./EnumListComponent";
 import { PriceSizeList } from "./PriceSizeList";
+import { TextArea } from "../shared/TextArea";
 
 const StrengthComponent : React.StatelessComponent<{value: StrengthEnum, strength: StrengthEnum, label: string, change: (strength: StrengthEnum) => void}> = ({value, strength, label, change}) => (
     <label><input type="radio" id="strength" value={value} checked={value === strength} onChange={() => change(strength)} /> {label}</label>
@@ -29,7 +30,8 @@ export class PurchaseRegistration extends React.Component<IPurchase, PurchasePos
                     max: props.maxGrade
                 },
                 strength: StrengthEnum.MEDIUM,
-                deliveryTime: DeliveryTime.OK
+                deliveryTime: DeliveryTime.OK,
+                comment: ""
             }
         };
         this.setPurchaseStrength = this.setPurchaseStrength.bind(this);
@@ -37,6 +39,7 @@ export class PurchaseRegistration extends React.Component<IPurchase, PurchasePos
         this.setGrade = this.setGrade.bind(this);
         this.setDeliveryTime = this.setDeliveryTime.bind(this);
         this.setPriceSize = this.setPriceSize.bind(this);
+        this.setComment = this.setComment.bind(this);
     }
 
     setPurchaseStrength(strength: StrengthEnum) {
@@ -93,6 +96,16 @@ export class PurchaseRegistration extends React.Component<IPurchase, PurchasePos
         });
     }
 
+    setComment(comment: String) {
+        this.setState({
+            ...this.state,
+            ratingInfo: {
+                ...this.state.ratingInfo,
+                comment
+            }
+        });
+    }
+
     render() {
         const strengthValues = [StrengthEnum.MILD, StrengthEnum.MEDIUM, StrengthEnum.HOT, StrengthEnum.INTENSE];
         const deliveryTimes = [DeliveryTime.SLOW, DeliveryTime.OK, DeliveryTime.FAST];
@@ -119,6 +132,7 @@ export class PurchaseRegistration extends React.Component<IPurchase, PurchasePos
                     <EnumListComponent enumToString={deliveryTimeToStringName} idBase="ri-delivery-time" select={this.setDeliveryTime} selected={ratingInfo.deliveryTime} title="Leveringstid" values={deliveryTimes} />
                     
                     <EnumListComponent enumToString={strengthToStringName} idBase="ri-strength" select={this.setRatingStrength} selected={ratingInfo.strength} title="Styrke" values={strengthValues}/>
+                    <TextArea id="comment" name="comment" label="Kommentar" onChange={this.setComment} value={this.state.ratingInfo.comment}/>
                 </div>
                 <button className="kebab-button-large" onClick={() => {
                     fetchCsrf().then((csrf: string) => {
